@@ -149,5 +149,5 @@ whitenoise==6.12.0 \
 
 
 
-django-otp==1.7.3
-django-otp[qrcode]==1.7.3
+django-otp==1.7.3 --hash=sha256:7d52fb0f76c4c1c86cbc71c196d3f79941b0b84aff980e45193bef89a70a7a12.3
+
