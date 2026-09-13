@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE 14 - Privacy notice. §1.2 row 14, /privacy/.
+
+REWRITTEN IN FULL, September 2026 compliance review. The previous version
+was not merely incomplete, it was inaccurate, and in a document where
+inaccuracy is the whole risk. It told visitors:
+
+  "the website does not transmit your details to a server of mine ... If
+   you close WhatsApp without tapping Send, I never receive your details
+   at all."
+
+and, separately, that a copy was kept in their own browser's
+localStorage, and that no details were shared with anyone.
+
+None of those three statements matched the code:
+
+  - core/static/js/main.js POSTs every field to /api/lead/ (or
+    /api/booking/) BEFORE the WhatsApp handoff, and ignores the response.
+    So the details reach the server whether or not the customer ever taps
+    Send in WhatsApp.
+  - core/views.py saves the row to PostgreSQL, including the submission IP
+    address for leads.
+  - core/notifications.py forwards it to Meta's WhatsApp Cloud API and, if
+    that fails, to Brevo - including the customer's full phone number in
+    the Brevo path.
+  - Sentry receives exception events; .gitlab-ci.yml keeps an encrypted
+    pg_dump in GitLab artifacts for seven days.
+  - The localStorage copy was REMOVED by an earlier security fix
+    (purgeLegacyLocalCopies), so that section described behaviour that no
+    longer existed while the behaviour that did exist went undocumented.
+
+Everything below is written from the code, not from intent. If the data
+flow changes, this page changes in the same commit - that is the whole
+point of the exercise.
+
+WHAT DRIVES THE VARIABLES: retention periods, the grievance contact and
+the trading identity all come from core/context_processors.py, and
+`manage.py purge_expired_leads` enforces the same retention constants. So
+the period published here is the period actually applied. core/checks.py
+(core.E003/E004/E005) blocks a production start if the identity or the
+grievance contact is missing, which is what stops this page rendering a
+promise with nobody behind it.
+
+LEGAL BASIS: DPDP Act 2023, with the DPDP Rules 2025 notified 13 November
+2025. s.5 governs the notice, s.6 consent, s.8(7) erasure, s.11-14 the
+Data Principal's rights, s.13 grievance redressal. Operational compliance
+is on an 18-month runway ending 13 May 2027; this page is written to that
+standard now rather than later.
+{% endcomment %}
+
+{% block title %}Privacy Notice | {{ business_name }}{% endblock %}
+{% block description %}What {{ business_name }} collects when you use the request or booking form, exactly where it goes, how long it is kept, and how to have it corrected or deleted.{% endblock %}
+{% block canonical_path %}/privacy/{% endblock %}
+{% block og_path %}/privacy/{% endblock %}
+{% block og_title %}Privacy Notice | {{ business_name }}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Privacy notice page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Privacy notice" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Privacy notice</span></li>
+  </ol>
+</nav>
+
+<section class="pagehead">
+  <div class="wrap">
+    <h1>Privacy notice</h1>
+    <p class="promise">Short version: I collect the few things I need to come and fix your plumbing.
+      Sending the form saves them on my server and alerts me over WhatsApp. I do not sell them, and
+      you can ask me to delete them at any time.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="prose">
+      <p class="lead">This notice explains what {{ business_name }} collects through this website,
+        where it actually goes, how long it is kept, and how to exercise your rights over it.
+        Last updated {{ policy_updated }}.</p>
+
+      <h2>Who is responsible for your data</h2>
+      {% comment %}
+      spaceless-sensitive: the optional clauses are written on one line so
+      that an unset proprietor name does not leave a stray space before the
+      comma ("a sole proprietorship , is the data fiduciary").
+      {% endcomment %}
+      <p>{{ business_name }}{% if business_entity_type %}, a {{ business_entity_type|lower }}{% endif %}{% if business_proprietor %} operated by {{ business_proprietor }}{% endif %}, is the data
+        fiduciary for the personal data described here. That means I decide what is collected and why,
+        and I am the one answerable for it.</p>
+      <ul>
+        {% if business_address_is_complete %}<li>{{ business_address_inline }}</li>{% endif %}
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+        {% if business_email %}<li>Email: <a href="mailto:{{ business_email }}">{{ business_email }}</a></li>{% endif %}
+        {% if business_gstin %}<li>GSTIN: {{ business_gstin }}</li>{% endif %}
+      </ul>
+
+      <h2>What I collect, and why</h2>
+      <p>Only what the job needs. Nothing on this website asks for anything that is not used to answer
+        your enquiry or carry out the work.</p>
+
+      <h3>Through the short request form</h3>
+      <ul>
+        <li><strong>Your name</strong> &mdash; so I know who I am talking to and who to ask for on
+          arrival.</li>
+        <li><strong>Your mobile number</strong> &mdash; so I can reply, confirm a time, and call you if
+          I cannot find the address.</li>
+        <li><strong>Your address or locality</strong> &mdash; so I know whether you are in an area I
+          cover and how long it takes me to get there.</li>
+        <li><strong>A description of the plumbing problem</strong> &mdash; so I can bring the right
+          parts and quote accurately.</li>
+        <li><strong>The service category</strong>, if you pick one &mdash; optional.</li>
+        <li><strong>Your consent</strong>, and a note of which version of the consent wording you were
+          shown.</li>
+      </ul>
+
+      <h3>Through the booking form</h3>
+      <p>The same details, plus:</p>
+      <ul>
+        <li><strong>Your email address</strong> &mdash; optional. Only used if you want written
+          confirmation.</li>
+        <li><strong>Preferred date, time slot and urgency</strong> &mdash; to hold the right amount of
+          time on the right day.</li>
+        <li><strong>Any extra notes</strong> you choose to add.</li>
+      </ul>
+
+      <h3>Collected automatically, not typed by you</h3>
+      <ul>
+        <li><strong>The IP address you submitted from</strong>, on the short request form only. This is
+          the one item that is not about doing your job: it exists solely to stop the form being
+          abused by automated submissions, each of which costs me a paid WhatsApp message. It is
+          erased after {{ retention_ip_days }} days, ahead of everything else, because it is the least
+          necessary thing here.</li>
+      </ul>
+      <p>I do not collect your browser type, your referring page, your location, or anything about how
+        you moved around the site. There is no analytics on this website at all &mdash; see
+        <a href="/cookies/">cookies</a>.</p>
+
+      <h2>Where your details actually go</h2>
+      <p>This section is deliberately specific, because an earlier version of this page described it
+        wrongly. When you press the send button on either form, two things happen at once.</p>
+      <ol>
+        <li><strong>Your details are sent to my server and saved</strong> in a PostgreSQL database
+          hosted by Neon, in a record only I can see. This happens immediately, when you press the
+          button.</li>
+        <li><strong>WhatsApp opens with the same details written out</strong> for you to send. You can
+          read it, edit it, or abandon it.</li>
+      </ol>
+      <p>The important consequence, stated plainly: <strong>if you fill in the form and press send, I
+        receive your details even if you then close WhatsApp without sending the message.</strong> The
+        earlier version of this page claimed the opposite. If you would rather I did not hold your
+        details at all, call instead, or message me on WhatsApp directly without using the form.</p>
+
+      <h2>Who else handles it</h2>
+      <p>I am one plumber, but I use a few ordinary services to run the website and to be told when
+        someone needs me. Each one is listed here with what it actually receives.</p>
+      <ul>
+        <li><strong>Meta Platforms</strong> (WhatsApp Cloud API) &mdash; receives your name, locality,
+          service category and the first part of your problem description, as the alert that tells me
+          you have been in touch. If you also send the WhatsApp message yourself, that conversation is
+          handled by WhatsApp under Meta's own privacy terms, and WhatsApp passes on the number you
+          message from, as it does in any chat.</li>
+        <li><strong>Brevo</strong> (email) &mdash; used only as a fallback when the WhatsApp alert
+          fails. In that case it receives your name, full phone number, locality, service and the
+          whole problem description, inside an email to me.</li>
+        <li><strong>Neon</strong> &mdash; hosts the database the record is stored in.</li>
+        <li><strong>Amazon Web Services (AWS)</strong> &mdash; runs the website itself on an EC2 instance.</li>
+        <li><strong>Sentry</strong> &mdash; receives technical error reports if something breaks. It is
+          configured not to send personal data, request bodies or local variables, specifically so
+          your details do not travel with a crash report.</li>
+        <li><strong>GitLab</strong> &mdash; holds a nightly encrypted backup of the database for seven
+          days, so that a failure does not lose your enquiry.</li>
+      </ul>
+      <p>Some of these companies are outside India and your data may be processed abroad. None of them
+        is permitted to use your details for their own purposes, and none of them is paid for your
+        data. I do not sell, rent or trade your details to anyone, ever, and there are no advertising
+        or data-broker services involved in this website.</p>
+
+      <h2>What I do not do</h2>
+      <ul>
+        <li>I do not sell, rent or share your details for marketing.</li>
+        <li>I do not add you to a mailing list. There is no newsletter.</li>
+        <li>I do not run advertising trackers, analytics, or third-party cookies. There is no Google
+          Analytics, no Tag Manager, and no advertising pixel on this site.</li>
+        <li>I do not take card or bank details on this website, and there is no online payment.</li>
+        <li>I do not use profiling or automated decision-making. A person &mdash; me &mdash; reads
+          every enquiry.</li>
+        <li>I do not knowingly collect details from anyone under 18. This is a service for whoever is
+          responsible for a property. If you are under 18, please ask an adult to make the enquiry.</li>
+      </ul>
+
+      <h2>How long I keep it</h2>
+      <p>These periods are enforced by a scheduled job that deletes the records automatically, not by
+        me remembering to do it.</p>
+      <ul>
+        <li><strong>Submission IP address: {{ retention_ip_days }} days.</strong> Erased from the
+          record while the rest of it is still there.</li>
+        <li><strong>Enquiries that never became a job: about {{ retention_enquiry_months }} months</strong>
+          from when you sent them, then deleted.</li>
+        <li><strong>Records of work actually carried out: about {{ retention_job_months }} months.</strong>
+          Longer, because the Consumer Protection Act 2019 gives you two years to raise a complaint
+          about work, and I cannot answer a dispute about your job if I have deleted the record of
+          it. That cuts both ways, and it is in your interest as much as mine.</li>
+      </ul>
+      <p>You do not have to wait for any of that. Ask me to delete your details and I will, unless I am
+        genuinely required to keep a record of work already carried out.</p>
+      <p>Separately, the server keeps standard technical logs for troubleshooting (error messages,
+        timestamps, request status codes). These are not the same as the records above: they do not
+        contain your name, phone number, email or other personal details, and they are not subject to
+        the retention periods described here.</p>
+      <p>The form also uses short-lived counters to detect abuse &mdash; for example, someone submitting
+        it dozens of times in quick succession. These counters store only a scrambled (hashed) value,
+        not a readable IP address or phone number. They expire within minutes and are swept away
+        automatically by the nightly cleanup job, well before any of the retention periods above
+        apply.</p>
+
+      <h2>Your rights</h2>
+      <p>Under the Digital Personal Data Protection Act 2023 you can:</p>
+      <ul>
+        <li><strong>Ask what I hold about you</strong>, and who I have shared it with.</li>
+        <li><strong>Ask me to correct or complete it</strong> &mdash; wrong number, wrong address, just
+          say.</li>
+        <li><strong>Ask me to erase it.</strong> I will, unless I am required to keep it.</li>
+        <li><strong>Withdraw your consent</strong> at any time. Tell me to stop contacting you and I
+          will stop. It does not affect work already agreed, or anything done before you withdrew.</li>
+        <li><strong>Nominate someone</strong> to exercise these rights for you if you die or become
+          incapable of doing so yourself.</li>
+        <li><strong>Complain</strong>, and be told what happened about it.</li>
+      </ul>
+      <p>There is no charge for any of this, and I will not ask you why. Please use email if you can
+        &mdash; it gives us both a dated record of what was asked and what I did.</p>
+
+      <h2>How to reach me, and how to complain</h2>
+      <p>Me, directly. There is no privacy department.</p>
+      <ul>
+        {% if grievance_name %}<li>Contact for data questions and complaints: {{ grievance_name }}</li>{% endif %}
+        {% if grievance_email %}<li>Email: <a href="mailto:{{ grievance_email }}">{{ grievance_email }}</a>
+          &mdash; the best route, and the one I can evidence a reply to</li>{% endif %}
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+        <li>WhatsApp: <a href="https://wa.me/{{ wa_number }}?text={% filter urlencode %}Hi {{ business_name }}, I have a question about privacy and my details.{% endfilter %}">message me</a></li>
+      </ul>
+      <p>I aim to answer any request about your data within 30 days. If you are not satisfied with how
+        I have handled it, you can complain to the <strong>Data Protection Board of India</strong>,
+        which was established under the Digital Personal Data Protection Act 2023. You are entitled to
+        go to the Board whether or not you come to me first, though it is usually quicker to ask me.</p>
+
+      <h2>How it is kept safe</h2>
+      <p>The site is served only over HTTPS. The database is not reachable from the public internet and
+        the connection to it is encrypted. Backups are encrypted before they are stored. The admin
+        console where I read enquiries is password-protected and locks out repeated wrong guesses.
+        Nothing here is a guarantee &mdash; no one can honestly give you one &mdash; but these are the
+        measures actually in place rather than a list of intentions.</p>
+
+      <h2>Changes to this notice</h2>
+      <p>If what I do with your details changes, this page changes at the same time, and the date at the
+        top changes with it. The consent wording on the forms carries a version stamp, and the version
+        you agreed to is recorded with your enquiry, so it is always possible to establish what you
+        were actually told.</p>
+
+      <p><a href="/cookies/">Cookie policy</a> &middot; <a href="/terms/">Terms of service</a> &middot;
+        <a href="/refunds/">Cancellations &amp; refunds</a> &middot; <a href="/contact/">Contact</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

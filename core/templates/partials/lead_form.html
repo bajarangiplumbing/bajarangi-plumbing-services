@@ -1,0 +1,193 @@
+{% comment %}
+WhatsApp service-request form - the primary conversion feature.
+implementation_plan.md §5 "WhatsApp service-request form (primary
+feature)" and PRD_website_pages.md PAGE 5 item [3].
+
+Ported from PRD/index.html with the four defects PRD PAGE 5 records as
+still standing now fixed:
+  - "Service needed" no longer silently submits its first option: it
+    opens on a neutral, valueless placeholder (PAGE 5, submit-path
+    item 5). It stays optional, exactly as the PRD form block
+    specifies - it just cannot default without the customer choosing.
+  - The consent checkbox now has its own <p class="err"> instead of a
+    bare focus move (PAGE 5, submit-path item 4).
+  - Every error paragraph is bound to its field with aria-describedby
+    (PAGE 5 "Submit button states" bullet; implementation_plan.md §9).
+  - The submit button now has idle -> sending -> sent states and is
+    disabled after a successful handoff, so repeated taps cannot
+    repeat the request (PAGE 5 "Duplicate-tap protection").
+
+STILL NOT SATISFIED, and deliberately not faked here:
+  - No action, no method, no server request. The lead is not recorded
+    for the business and no staff notification is sent.
+    implementation_plan.md §5 (steps 2 and the email/SMS fallback),
+    §6 reliability, §7 Lead model. Backend, out of scope.
+  - implementation_plan.md §12 "Every essential page works without
+    JavaScript" therefore cannot be met by this form. The <noscript>
+    block below keeps the conversion path alive without JS by falling
+    back to a plain call / WhatsApp link, but that is a mitigation,
+    not the server-rendered POST the plan requires.
+
+Optional include arguments:
+  fid             id prefix, default "f"
+  form_title      visible heading text; omitted if not supplied
+  form_title_tag  "h2" (default) or "h3"
+  prefill_service pre-selects a "Service needed" option (PRD PAGE TYPE 2 item [8])
+  prefill_area    pre-fills "Address / locality" (PRD PAGE TYPE 3 item [7])
+{% endcomment %}
+{% with p=fid|default:"f" %}
+<form class="qcard rv" id="{{ p }}-leadForm" data-lead-form novalidate>
+  {% csrf_token %}
+  {% if form_title %}
+    {% if form_title_tag == "h3" %}<h3>{{ form_title }}</h3>{% else %}<h2>{{ form_title }}</h2>{% endif %}
+    <p class="card-sub">Four details and a tap. I read every message myself.</p>
+  {% endif %}
+
+  <div class="field">
+    <label for="{{ p }}-name">Full name</label>
+    <input id="{{ p }}-name" name="name" type="text" data-f="name"
+           placeholder="Your Name" autocomplete="name" maxlength="120"
+           aria-describedby="{{ p }}-name-err" required>
+    <p class="err" id="{{ p }}-name-err">Please enter your name.</p>
+  </div>
+
+  <div class="field">
+    <label for="{{ p }}-phone">Phone number</label>
+    <input id="{{ p }}-phone" name="phone" type="tel" data-f="phone"
+           inputmode="numeric" placeholder="10-digit mobile" autocomplete="tel"
+           maxlength="15"
+           aria-describedby="{{ p }}-phone-err" required>
+    <p class="err" id="{{ p }}-phone-err">Enter a valid 10-digit Indian mobile number.</p>
+  </div>
+
+  <div class="field">
+    <label for="{{ p }}-area">Address / locality</label>
+    <input id="{{ p }}-area" name="area" type="text" data-f="area"
+           placeholder="Current Address" maxlength="120"
+           {% if prefill_area %}value="{{ prefill_area }}"{% endif %}
+           aria-describedby="{{ p }}-area-err" required>
+    <p class="err" id="{{ p }}-area-err">Please tell me your area.</p>
+  </div>
+
+  <div class="field">
+    <label for="{{ p }}-service">Service needed <span class="opt">(optional)</span></label>
+    <select id="{{ p }}-service" name="service" data-f="service">
+      <option value="" {% if not prefill_service %}selected{% endif %}>Choose a service, or leave this</option>
+      <optgroup label="Main services">
+        <option{% if prefill_service == "Leak Detection & Repair" %} selected{% endif %}>Leak Detection &amp; Repair</option>
+        <option{% if prefill_service == "Water Tank & Motor Work" %} selected{% endif %}>Water Tank &amp; Motor Work</option>
+        <option{% if prefill_service == "WC / Toilet Fittings" %} selected{% endif %}>WC / Toilet Fittings</option>
+        <option{% if prefill_service == "Washbasin & Bath Accessories Fittings" %} selected{% endif %}>Washbasin &amp; Bath Accessories Fittings</option>
+        <option{% if prefill_service == "Bathroom Tile Grouting" %} selected{% endif %}>Bathroom Tile Grouting</option>
+        <option{% if prefill_service == "New Bathroom Installation & Full Renovation" %} selected{% endif %}>New Bathroom Installation &amp; Full Renovation</option>
+      </optgroup>
+      <optgroup label="Other enquiries">
+        <option{% if prefill_service == "Drain & blockage cleaning" %} selected{% endif %}>Drain &amp; blockage cleaning</option>
+        <option{% if prefill_service == "Emergency fix" %} selected{% endif %}>Emergency fix</option>
+      </optgroup>
+      <option{% if prefill_service == "Not sure / other" %} selected{% endif %}>Not sure / other</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="{{ p }}-issue">Plumbing issue</label>
+    {% comment %}
+      maxlength mirrors LeadForm.MAX_MESSAGE_CHARS (security review H3).
+      It is a courtesy to honest users so they are not rejected after
+      typing - the enforcement that matters is server-side, since an
+      attacker simply does not use this form.
+    {% endcomment %}
+    <textarea id="{{ p }}-issue" name="issue" data-f="issue"
+              placeholder="Briefly describe your plumbing concern&hellip;"
+              maxlength="2000"
+              aria-describedby="{{ p }}-issue-err" required></textarea>
+    <p class="err" id="{{ p }}-issue-err">Please describe the problem.</p>
+  </div>
+
+  {% comment %}
+  HONEYPOT. LeadForm declares a `website` field and rejects any submission
+  that fills it, but the field was never rendered in any template - so a
+  bot posting directly simply omitted it and passed the check. It was an
+  anti-spam control that existed only in the backend's imagination.
+
+  aria-hidden and tabindex="-1" keep it away from screen readers and from
+  the tab order, so it traps scripts without ever reaching a real user.
+  autocomplete="off" stops a browser helpfully filling it in, which would
+  otherwise reject a genuine customer as spam.
+  {% endcomment %}
+  <div class="hp" aria-hidden="true">
+    <label for="{{ p }}-website">Leave this field empty</label>
+    <input id="{{ p }}-website" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
+
+  {% comment %}
+  CONSENT - rewritten for DPDP Act 2023 s.6(1), which requires consent to
+  be free, specific, informed and unambiguous, given by a clear
+  affirmative action and limited to the stated purpose.
+
+  The previous wording was "I agree to be contacted on this number about
+  my request", which named no data, no purpose beyond "contact", and no
+  recipient. It could not be described as informed, and it was materially
+  incomplete in one specific way: it did not mention that submitting this
+  form sends the details to a server and on to Meta via the WhatsApp
+  Cloud API. The privacy page at the time actively denied that happened.
+
+  The checkbox stays unchecked by default and the form will not submit
+  without it, which is the "clear affirmative action" limb.
+
+  consent_notice_version is submitted alongside so the server can record
+  WHICH wording was agreed to. Without it, proving informed consent years
+  later is impossible - the text would have changed and no record of the
+  old one would exist.
+  {% endcomment %}
+  <input type="hidden" name="consent_notice_version" value="{{ consent_notice_version }}">
+  <div class="field">
+    <label class="consent" for="{{ p }}-consent">
+      <input type="checkbox" id="{{ p }}-consent" name="consent" data-f="consent"
+             aria-describedby="{{ p }}-consent-err {{ p }}-consent-detail" required>
+      <span>I agree that {{ business_name }} may store my name, phone number, address and problem
+        description, and contact me about this request. I understand the message is delivered through
+        WhatsApp, so Meta handles it too.</span>
+    </label>
+    <p class="consent-detail" id="{{ p }}-consent-detail">Used only to answer this enquiry and do the
+      work &mdash; never for marketing, never sold. You can withdraw consent or ask me to delete your
+      details at any time. <a href="/privacy/">Full privacy notice</a> &middot;
+      <a href="/cookies/">Cookies</a>.</p>
+    <p class="err" id="{{ p }}-consent-err">Please tick this so I can contact you back.</p>
+  </div>
+
+  {% comment %}
+  Error summary. The form previously showed inline errors and moved focus
+  to the first invalid control, which satisfies WCAG 3.3.1 narrowly, but
+  gave no overview - a keyboard or screen-reader user learned about one
+  problem at a time. role="alert" announces the count as soon as it is
+  populated. Empty until then, so it never announces on page load.
+  {% endcomment %}
+  <p class="form-err-summary" id="{{ p }}-err-summary" data-error-summary role="alert"></p>
+
+  <button class="pill pill-navy" type="submit"
+          data-label-idle="Send request on WhatsApp"
+          data-label-sending="Opening WhatsApp&hellip;"
+          data-label-sent="Request sent to WhatsApp">Send request on WhatsApp</button>
+
+  <div class="wa-note">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.7 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Z"/></svg>
+    <span>WhatsApp opens with your details already written. <b>You must tap Send</b> there to deliver it &mdash; a website can't send it for you.</span>
+  </div>
+
+  <p class="form-ok" role="status">WhatsApp is opening &mdash; tap <b>Send</b> to finish. Didn't open?
+    <a data-wa-link href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}">Tap here</a>.</p>
+
+  <p class="form-err-api" role="alert"></p>
+
+  <noscript>
+    <div class="form-noscript">
+      <p><b>This form needs JavaScript to prefill your WhatsApp message.</b>
+        JavaScript looks like it is switched off, so please reach me directly instead
+        &mdash; both of these work without it.</p>
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-light" href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I need a plumber in Bhubaneswar.{% endfilter %}">Open WhatsApp</a>
+    </div>
+  </noscript>
+</form>
+{% endwith %}

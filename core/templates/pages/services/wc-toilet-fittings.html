@@ -1,0 +1,83 @@
+{% extends "pages/service_base.html" %}
+
+{% block title %}WC &amp; Toilet Fittings in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}WC and toilet fitting in Bhubaneswar, including replacement toilets, cisterns, flush connections and related plumbing. Independent plumber, 15+ years.{% endblock %}
+{% block canonical_path %}/services/wc-toilet-fittings/{% endblock %}
+{% block og_path %}/services/wc-toilet-fittings/{% endblock %}
+{% block og_title %}WC &amp; Toilet Fittings in Bhubaneswar{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="WC and toilet fittings page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "WC / Toilet Fittings",
+  "serviceType": "WC and toilet fitting",
+  "url": "{{ site_url }}/services/wc-toilet-fittings/",
+  "description": "WC and toilet fitting in Bhubaneswar, including replacement toilets, cisterns, flush connections and related plumbing.",
+  "provider": { "@id": "{{ site_url }}/#business" },
+  "areaServed": { "@type": "City", "name": "Bhubaneswar" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "{{ site_url }}/#services" },
+    { "@type": "ListItem", "position": 3, "name": "WC / Toilet Fittings" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block crumb_label %}WC / Toilet Fittings{% endblock %}
+{% block svc_h1 %}WC &amp; toilet fittings in Bhubaneswar{% endblock %}
+{% block svc_promise %}A toilet needs to sit level, seal properly and flush without leaking. Care at the connections is what keeps a straightforward fitting from becoming a damp floor later.{% endblock %}
+
+{% block svc_intro %}
+<p class="lead">I fit and replace WCs and the plumbing that makes them work, from the inlet valve and cistern to the flush connection and soil outlet.</p>
+<p>Before fitting anything, I check the outlet position, water connection and available space against the WC you have chosen. A model that does not match the existing outlet can turn a simple replacement into unnecessary alteration, so it is worth checking before you buy.</p>
+<p>This service covers toilet fitting and its directly related plumbing. It does not include electrical work, tile installation or waterproofing.</p>
+{% endblock %}
+
+{% block svc_problems_heading %}WC and toilet work I take on{% endblock %}
+{% block svc_problems_lead %}New fittings, replacements and the connections around them.{% endblock %}
+{% block svc_problems %}
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>New WC installation where the water and waste points are ready</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Replacing an old or damaged WC with a compatible model</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Exposed and concealed cistern fitting and connection</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Flush pipe, pan connector and inlet connection replacement</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Running cisterns, weak flushes and leaking WC connections</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Health faucet and nearby angle-valve fitting</span></li>
+{% endblock %}
+
+{% block svc_process %}
+<li><b>Check the WC against the room</b><p>I compare the outlet, inlet, dimensions and fixing points before the old fitting comes out.</p></li>
+<li><b>Prepare sound connections</b><p>The floor, waste outlet and water feed are checked and cleaned so the new seals are not being asked to hide an old problem.</p></li>
+<li><b>Fit, level and connect</b><p>The WC is positioned securely, connected without strain and sealed where appropriate.</p></li>
+<li><b>Flush-test under normal use</b><p>I fill and flush repeatedly, then check the inlet, cistern, pan connection and floor for movement or seepage.</p></li>
+{% endblock %}
+
+{% block svc_pricing %}
+<h3>How I price WC fitting</h3>
+<p>The price depends on whether this is a like-for-like replacement or whether the outlet, water point or mounting arrangement must change. I inspect those points before confirming the figure.</p>
+<p style="margin-top:10px">The WC and visible fittings can be supplied by you or sourced for you. Parts and labour are shown separately.</p>
+{% endblock %}
+
+{% block svc_related %}
+<a class="lcard" href="/services/washbasin-bath-accessories/"><b>Washbasin &amp; bath accessories</b><p>Basins, taps, showers, rails, mirrors and related fittings.</p><span class="go">View fittings &rarr;</span></a>
+<a class="lcard" href="/services/bathroom-installation-renovation/"><b>Bathroom installation &amp; renovation</b><p>Plumbing and fitting work across a new or renovated bathroom.</p><span class="go">View bathroom work &rarr;</span></a>
+<a class="lcard" href="/services/leak-repair/"><b>Leak detection &amp; repair</b><p>When water around the WC is coming from a concealed or pressurised connection.</p><span class="go">View leak repair &rarr;</span></a>
+{% endblock %}
+
+{% block svc_form %}{% include "partials/lead_form.html" with prefill_service="WC / Toilet Fittings" form_title="Ask about a WC fitting" form_title_tag="h3" %}{% endblock %}
+
+{% block svc_faq_heading %}WC fitting questions{% endblock %}
+{% block svc_faq %}
+<details><summary>Can you replace my WC with any model?</summary><div class="answer"><p>Not always as a direct swap. The outlet direction, distance from the wall and water point must suit the new WC. Send the model details before buying and I can check the basics.</p></div></details>
+<details><summary>Do you fit concealed cisterns?</summary><div class="answer"><p>Yes, for the plumbing and fitting work. Any wall construction or tile installation needed around it must be handled separately.</p></div></details>
+<details><summary>Can you repair a running toilet instead of replacing it?</summary><div class="answer"><p>Often. A fill valve, flush valve, seal or connection may be the only failed part. I will tell you when repair is sensible and when replacement is better value.</p></div></details>
+{% endblock %}

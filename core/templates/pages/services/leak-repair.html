@@ -1,0 +1,171 @@
+{% extends "pages/service_base.html" %}
+{% comment %}
+PRD_website_pages.md §1.2 row 3 - /services/leak-repair/
+"Leak Detection & Repair". PAGE TYPE 2 template.
+{% endcomment %}
+
+{% block title %}Leak Detection &amp; Repair in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Damp patch, dripping ceiling or a water bill that makes no sense? Independent Bhubaneswar plumber, 15+ years, traces the leak to its source before opening anything. WhatsApp me.{% endblock %}
+{% block canonical_path %}/services/leak-repair/{% endblock %}
+{% block og_path %}/services/leak-repair/{% endblock %}
+{% block og_title %}Leak Detection &amp; Repair in Bhubaneswar{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Leak detection & repair page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Leak detection and repair",
+  "serviceType": "Leak detection and repair",
+  "url": "{{ site_url }}/services/leak-repair/",
+  "description": "Tracing and repairing concealed and visible water leaks in Bhubaneswar homes, including wall and floor runs, ceiling damp and supply-line leaks.",
+  "provider": { "@id": "{{ site_url }}/#business" },
+  "areaServed": { "@type": "City", "name": "Bhubaneswar" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "{{ site_url }}/#services" },
+    { "@type": "ListItem", "position": 3, "name": "Leak detection and repair" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block crumb_label %}Leak detection &amp; repair{% endblock %}
+{% block svc_h1 %}Leak detection &amp; repair in Bhubaneswar{% endblock %}
+{% block svc_promise %}The wet patch is almost never directly under the leak. Water travels along
+whatever it finds &mdash; a conduit, a slab, the back of a tile &mdash; and comes out somewhere else.
+Finding where it starts is most of this job.{% endblock %}
+
+{% block svc_intro %}
+<p class="lead">This is the work I am called out for most, and the work most often made worse by
+guessing. Somebody opens the wall under the damp patch, finds dry pipe, and now you have a hole and a
+leak.</p>
+<p>So I trace it. I isolate sections and watch what the meter does with everything closed. I check the
+obvious suspects first, in order of how often they are actually the cause: mixer bodies and their
+concealed tails, the connection behind a WC cistern, the shower diverter, waste joints, and only then
+buried supply runs. Where the leak is upstairs and showing downstairs, I work out whether it is a
+supply line under pressure or a waste run that only leaks when the fixture is used &mdash; those two
+behave completely differently and point to different pipes.</p>
+<p>I am straight about the limits of doing this without specialist gear. I do not own thermal imaging
+or acoustic equipment. What I have is fifteen years of knowing where these pipes run in Bhubaneswar
+buildings and a methodical way of eliminating them. That solves the large majority of leaks with one
+small opening rather than several. If yours turns out to need instruments I do not have, I will tell
+you that instead of chasing it through your walls at your expense.</p>
+{% endblock %}
+
+{% block svc_problems_heading %}Leaks I trace and fix{% endblock %}
+{% block svc_problems_lead %}If you can see water, or your bill says there is water going somewhere
+you cannot see, this is the page.{% endblock %}
+{% block svc_problems %}
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Damp patch or bloom on a wall that keeps coming back after painting</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Water coming through a ceiling from the bathroom above</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Concealed mixer or diverter leaking behind the tiles</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Constant seepage behind a WC cistern or at the flush connection</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Supply line weeping at a joint, union or angle valve</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Overhead tank overflowing and running down an outside wall</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Water meter creeping when every tap in the house is closed</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Burst or split pipe that needs isolating now, not diagnosing</span></li>
+{% endblock %}
+
+{% block svc_process %}
+<li><b>Isolate and observe</b><p>Everything closed, then watch the meter and the wet area. A leak
+that continues with nothing running is on the pressurised side. One that only appears when a fixture
+is used is on the waste side. That single test rules out half the possibilities.</p></li>
+<li><b>Eliminate the likely causes in order</b><p>Fittings, seals and concealed valve bodies before
+buried pipe, because that is where leaks actually are most of the time. I check from the accessible
+side wherever there is one.</p></li>
+<li><b>Open the smallest hole that will do</b><p>When something has to be opened, I open it where the
+evidence says the leak is, not where the stain is. One tidy opening rather than exploratory damage
+across a wall.</p></li>
+<li><b>Repair, pressure-test, then close up</b><p>Repair the section properly rather than clamping
+over it, restore pressure and leave it under load while I watch the joint. Then I make good, and I
+tell you honestly how long the wall needs to dry before you repaint &mdash; painting over a damp wall
+is how people conclude the leak came back.</p></li>
+{% endblock %}
+
+{% block svc_pricing %}
+<h3>How I price leak work</h3>
+<p>Leak repairs are quoted in two parts, because the finding and the fixing are genuinely separate
+pieces of work and it is fairer to you to see them apart:</p>
+<ul>
+  <li><strong>Tracing</strong> &mdash; how long it takes to locate, which depends on access and how
+    far the water has travelled from its source</li>
+  <li><strong>Repair</strong> &mdash; what has to be opened, what has to be replaced, and how much
+    making good is involved</li>
+</ul>
+<p>You see both figures before I start cutting anything. If tracing tells me the repair is beyond what
+I should be doing &mdash; a slab leak needing instruments, or something structural &mdash; you pay for
+the tracing and I tell you what you actually need. You will not be charged for a repair I could not
+finish.</p>
+{% endblock %}
+
+{% comment %}
+Two invented testimonials were removed from here (compliance review,
+September 2026). See the note in pages/service_base.html for the reasoning
+and for the bar a real review has to clear before it goes back.
+{% endcomment %}
+
+{% block svc_related %}
+<a class="lcard" href="/services/wc-toilet-fittings/">
+  <b>WC / Toilet Fittings</b>
+  <p>When a leaking WC connection is the source of the damp.</p>
+  <span class="go">WC fittings &rarr;</span>
+</a>
+<a class="lcard" href="/services/water-tank/">
+  <b>Water Tank &amp; Motor Work</b>
+  <p>Overflowing tanks and failed float valves cause a lot of "wall leaks".</p>
+  <span class="go">Water tank work &rarr;</span>
+</a>
+<a class="lcard" href="/services/bathroom-installation-renovation/">
+  <b>Bathroom Installation &amp; Renovation</b>
+  <p>Trace and repair concealed leaks before renovation work covers the pipework.</p>
+  <span class="go">Bathroom work &rarr;</span>
+</a>
+{% endblock %}
+
+{% block svc_form %}{% include "partials/lead_form.html" with prefill_service="Leak Detection & Repair" form_title="Get a leak traced" form_title_tag="h3" %}{% endblock %}
+
+{% block svc_faq_heading %}Leak questions{% endblock %}
+{% block svc_faq %}
+<details>
+  <summary>Can you find a leak without breaking the wall?</summary>
+  <div class="answer">
+    <p>Often, yes. Isolating sections and watching the meter, plus checking every accessible fitting,
+      locates most leaks without opening anything. When something does have to be opened, the point of
+      tracing first is that it is one small hole in the right place.</p>
+    <p>What I cannot do is promise zero opening on a buried run. Anyone who promises that before
+      looking is guessing.</p>
+  </div>
+</details>
+<details>
+  <summary>Do you use thermal or acoustic leak detection?</summary>
+  <div class="answer">
+    <p>No, and I would rather say so than imply otherwise. I work by isolation, elimination and
+      knowing how these buildings are piped. If your leak genuinely needs instruments, I will tell
+      you after tracing rather than chase it through your walls.</p>
+  </div>
+</details>
+<details>
+  <summary>The damp keeps coming back after painting. Is that a leak?</summary>
+  <div class="answer">
+    <p>Usually, though not always &mdash; it can also be rising damp or a failed external seal. The
+      difference matters, because a plumber cannot fix the second one. I will tell you which it looks
+      like rather than sell you a repair for the wrong problem.</p>
+  </div>
+</details>
+<details>
+  <summary>My meter moves with all the taps closed. How bad is that?</summary>
+  <div class="answer">
+    <p>It means water is escaping somewhere on the pressurised side, and it will not improve on its
+      own. Worth looking at soon, even if you cannot see any water yet &mdash; the ones you cannot see
+      are the ones that damage the building.</p>
+  </div>
+</details>
+{% endblock %}

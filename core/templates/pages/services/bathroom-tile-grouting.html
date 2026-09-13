@@ -1,0 +1,83 @@
+{% extends "pages/service_base.html" %}
+
+{% block title %}Bathroom Tile Grouting in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Bathroom tile grout repair and regrouting in Bhubaneswar for worn, cracked or missing grout on existing tiles. Not a tile-installation service.{% endblock %}
+{% block canonical_path %}/services/bathroom-tile-grouting/{% endblock %}
+{% block og_path %}/services/bathroom-tile-grouting/{% endblock %}
+{% block og_title %}Bathroom Tile Grouting in Bhubaneswar{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Bathroom tile grouting page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Bathroom Tile Grouting",
+  "serviceType": "Bathroom tile grout repair and regrouting",
+  "url": "{{ site_url }}/services/bathroom-tile-grouting/",
+  "description": "Repairing and regrouting grout on existing bathroom tiles in Bhubaneswar. This service does not include new tile installation, tile replacement, waterproofing or demolition.",
+  "provider": { "@id": "{{ site_url }}/#business" },
+  "areaServed": { "@type": "City", "name": "Bhubaneswar" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "{{ site_url }}/#services" },
+    { "@type": "ListItem", "position": 3, "name": "Bathroom Tile Grouting" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block crumb_label %}Bathroom Tile Grouting{% endblock %}
+{% block svc_h1 %}Bathroom tile grouting in Bhubaneswar{% endblock %}
+{% block svc_promise %}Worn or missing grout makes a finished bathroom look tired and leaves joints holding dirt. Regrouting restores those joints without pretending to replace the waterproofing behind the tiles.{% endblock %}
+
+{% block svc_intro %}
+<p class="lead">I repair and regrout grout on existing bathroom tiles where joints have cracked, worn away, stained beyond cleaning or become patchy.</p>
+<p>The work is limited to existing tiled surfaces. It does not include new tile installation, tile replacement, waterproofing, demolition or rebuilding the surface behind loose tiles.</p>
+<p>Grout is a finish between tiles, not a substitute for a waterproofing system. If the real problem is a plumbing leak, loose tile bed or failed waterproofing, I will say so instead of selling regrouting as a cure.</p>
+{% endblock %}
+
+{% block svc_problems_heading %}Existing-tile grout work I take on{% endblock %}
+{% block svc_problems_lead %}Repair and renewal of grout joints, without removing or installing tiles.{% endblock %}
+{% block svc_problems %}
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Cracked or missing grout between existing bathroom tiles</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Old patch repairs that are loose, uneven or mismatched</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Worn joints around shower and wet-area walls</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Discoloured grout that cannot be restored by normal cleaning</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Careful removal of failed grout from sound, existing tile joints</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Regrouting of sound tiled areas after the joints are prepared</span></li>
+{% endblock %}
+
+{% block svc_process %}
+<li><b>Check that regrouting is appropriate</b><p>I look for loose tiles, movement, active leaks and signs that the problem sits behind the tiled surface.</p></li>
+<li><b>Remove failed grout carefully</b><p>Loose and damaged material is taken out without presenting the work as tile removal or replacement.</p></li>
+<li><b>Clean and prepare the joints</b><p>Dust and loose material are cleared so the replacement grout bonds to a sound joint.</p></li>
+<li><b>Regrout and finish</b><p>New grout is worked into the prepared joints, finished consistently and given the appropriate time to cure before the area is used.</p></li>
+{% endblock %}
+
+{% block svc_pricing %}
+<h3>How I price regrouting</h3>
+<p>The price depends on the area, joint condition, access and how much failed grout must be removed before new material can be applied.</p>
+<p style="margin-top:10px">If inspection shows loose tiles, failed waterproofing or another problem outside this service, I will stop and explain that before work begins.</p>
+{% endblock %}
+
+{% block svc_related %}
+<a class="lcard" href="/services/leak-repair/"><b>Leak detection &amp; repair</b><p>When damp or staining is being caused by a plumbing leak rather than worn grout.</p><span class="go">View leak repair &rarr;</span></a>
+<a class="lcard" href="/services/bathroom-installation-renovation/"><b>Bathroom installation &amp; renovation</b><p>Plumbing and fitting work for a larger bathroom project.</p><span class="go">View bathroom work &rarr;</span></a>
+<a class="lcard" href="/services/washbasin-bath-accessories/"><b>Washbasin &amp; bath accessories</b><p>Finish the room with basin, shower and accessory fittings.</p><span class="go">View fittings &rarr;</span></a>
+{% endblock %}
+
+{% block svc_form %}{% include "partials/lead_form.html" with prefill_service="Bathroom Tile Grouting" form_title="Ask about regrouting" form_title_tag="h3" %}{% endblock %}
+
+{% block svc_faq_heading %}Tile grouting questions{% endblock %}
+{% block svc_faq %}
+<details><summary>Do you install or replace bathroom tiles?</summary><div class="answer"><p>No. This service repairs and replaces grout between existing tiles. It does not include new tile installation, tile replacement or demolition.</p></div></details>
+<details><summary>Will new grout fix a leaking bathroom?</summary><div class="answer"><p>Not if the leak comes from pipework or failed waterproofing. I check for signs of those problems first and will not present grout as a substitute for the correct repair.</p></div></details>
+<details><summary>Do you provide waterproofing?</summary><div class="answer"><p>No. Waterproofing is explicitly outside this service.</p></div></details>
+{% endblock %}

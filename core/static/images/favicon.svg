@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="Bajarangi Plumbing Services">
+  <title>Bajarangi Plumbing Services</title>
+  <rect x="0" y="0" width="40" height="40" rx="9" fill="#14306E"/>
+  <path d="M11 28V18a9 9 0 0 1 18 0" stroke="#8AD4E0" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+  <path d="M20 28v-7" stroke="#F5A733" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+  <path d="M11 28h18" stroke="#2358A8" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+</svg>

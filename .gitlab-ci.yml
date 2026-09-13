@@ -1,0 +1,107 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/user/application_security/sast/#available-cicd-variables
+# Secret Detection customization: https://docs.gitlab.com/user/application_security/secret_detection/pipeline/configure/
+# Dependency Scanning customization: https://docs.gitlab.com/user/application_security/dependency_scanning/dependency_scanning_sbom/#customizing-analyzer-behavior
+# Container Scanning customization: https://docs.gitlab.com/user/application_security/container_scanning/#customizing-analyzer-behavior
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ci/variables/#cicd-variable-precedence
+stages:
+- test
+- secret-detection
+- backup
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
+- template: Security/Secret-Detection.gitlab-ci.yml
+# Security review L5. SAST reads this project's own code and Secret
+# Detection catches a committed credential, but neither looks at what the
+# dependencies drag in. uv.lock pins exact versions, which makes the set
+# auditable - this is what audits it.
+- template: Security/Dependency-Scanning.gitlab-ci.yml
+variables:
+  SECRET_DETECTION_ENABLED: 'true'
+secret_detection:
+  stage: secret-detection
+
+# backend_plan.md §12 step 8 - "Database backups" in §10's table.
+#
+# Two things live outside this file, in GitLab's project settings:
+#   1. DATABASE_URL as a masked, protected CI/CD variable (Settings ->
+#      CI/CD -> Variables). Never hardcoded here - the Secret Detection
+#      job above is exactly the safety net for that mistake.
+#   2. A nightly Pipeline Schedule (Build -> Pipeline schedules), which is
+#      what makes CI_PIPELINE_SOURCE == "schedule" true below. Without the
+#      schedule this job simply never runs, including on ordinary pushes.
+#
+# The image tag is the one value that differs from §12's literal snippet,
+# which says postgres:16-alpine. The Neon instance this repo is wired to
+# runs PostgreSQL 18.4, and pg_dump refuses to dump a server newer than
+# itself ("aborting because of server version mismatch") - so a 16 client
+# would fail every night. The major version is matched to the server
+# instead; revisit it if Neon's compute is ever pinned to another major.
+#
+# Security review M5. As written in §12 this job produced a plaintext dump
+# of every customer's name, phone, address, IP and consent record, kept as
+# a downloadable artifact for 30 days. The dump is the single most
+# sensitive artifact this project produces and it had the weakest
+# protection of anything here. Now:
+#   - it is encrypted with AES-256 before it is ever an artifact, and the
+#     plaintext is removed inside the job;
+#   - the job fails closed if the passphrase is missing, so a
+#     misconfiguration can never quietly publish an unencrypted dump;
+#   - retention drops from 30 days to 7, since these are for recovery, not
+#     archival, and each copy is another place the data can leak from;
+#   - download is restricted to project members at Developer or above.
+#
+# BACKUP_GPG_PASSPHRASE must be a masked, protected CI/CD variable. Store
+# the passphrase itself somewhere durable and offline - a dump you cannot
+# decrypt is not a backup.
+#
+# Restore with:
+#   gpg --batch --decrypt --output leads.dump leads-backup-YYYY-MM-DD.dump.gpg
+#   pg_restore --no-owner --dbname "$DATABASE_URL" leads.dump
+#
+# Note on "$DATABASE_URL" below: passing a connection string as an
+# argument makes it visible in the process list *inside this container*.
+# That is accepted rather than fixed, because the container is
+# single-tenant and ephemeral, and the alternative (unpicking the URL into
+# PG* variables in shell) adds a parsing step that could silently break
+# the backup - a worse outcome than the exposure it removes. What does
+# matter operationally: keep the variable masked, and leave CI_DEBUG_TRACE
+# off, since that would echo it into the job log.
+nightly-db-backup:
+  stage: backup
+  image: postgres:18-alpine
+  rules:
+  - if: '$CI_PIPELINE_SOURCE == "schedule"'
+  script:
+  - |
+    set -eu
+
+    # Fail closed, before pg_dump runs: no passphrase means no plaintext
+    # dump is ever written to disk in the first place.
+    if [ -z "${BACKUP_GPG_PASSPHRASE:-}" ]; then
+      echo "BACKUP_GPG_PASSPHRASE is not set." >&2
+      echo "Refusing to write an unencrypted dump of customer data." >&2
+      exit 1
+    fi
+
+    apk add --no-cache gnupg
+
+    DUMP_FILE="leads-backup-$(date +%F).dump"
+    pg_dump "$DATABASE_URL" --no-owner --format=custom -f "$DUMP_FILE"
+
+    # Passphrase arrives on stdin, not argv: printf is a shell builtin, so
+    # it spawns no process whose arguments could be read.
+    printf '%s' "$BACKUP_GPG_PASSPHRASE" | gpg --batch --yes --symmetric \
+      --cipher-algo AES256 --passphrase-fd 0 \
+      --output "$DUMP_FILE.gpg" "$DUMP_FILE"
+
+    rm -f "$DUMP_FILE"
+    ls -lh "$DUMP_FILE.gpg"
+  artifacts:
+    paths:
+    - leads-backup-*.dump.gpg
+    expire_in: 7 days
+    access: developer

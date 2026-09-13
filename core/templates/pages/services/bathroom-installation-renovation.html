@@ -1,0 +1,85 @@
+{% extends "pages/service_base.html" %}
+
+{% block title %}New Bathroom Installation &amp; Full Renovation in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Plumbing and directly related fitting work for new bathrooms and full bathroom renovations in Bhubaneswar. Electrical work, tiling and waterproofing are excluded.{% endblock %}
+{% block canonical_path %}/services/bathroom-installation-renovation/{% endblock %}
+{% block og_path %}/services/bathroom-installation-renovation/{% endblock %}
+{% block og_title %}New Bathroom Installation &amp; Full Renovation{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Bathroom installation and renovation page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "New Bathroom Installation & Full Renovation",
+  "serviceType": "Bathroom plumbing installation and renovation",
+  "url": "{{ site_url }}/services/bathroom-installation-renovation/",
+  "description": "Plumbing and directly related fitting work for new bathrooms and full bathroom renovations in Bhubaneswar. Electrical work, tile installation and waterproofing are not included.",
+  "provider": { "@id": "{{ site_url }}/#business" },
+  "areaServed": { "@type": "City", "name": "Bhubaneswar" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "{{ site_url }}/#services" },
+    { "@type": "ListItem", "position": 3, "name": "New Bathroom Installation & Full Renovation" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block crumb_label %}Bathroom Installation &amp; Renovation{% endblock %}
+{% block svc_h1 %}New bathroom installation &amp; full renovation{% endblock %}
+{% block svc_promise %}I handle the plumbing and directly related fitting work for a new bathroom or a full renovation, with the scope agreed clearly before the room is opened up.{% endblock %}
+
+{% block svc_intro %}
+<p class="lead">For new bathrooms and full renovations, I plan and install the supply, waste and fixture connections, then return for the final bathroom fittings after the surrounding work is ready.</p>
+<p>My direct scope is plumbing and directly related fitting work only. I do not perform electrical work, tile installation or waterproofing, and I will not include those trades in my own service description or quote.</p>
+<p>Need an electrician or tiler too? Ask &mdash; I am happy to point you to someone reliable as an informal referral, but their work, availability and agreement remain separate from mine.</p>
+{% endblock %}
+
+{% block svc_problems_heading %}Bathroom installation work I take on{% endblock %}
+{% block svc_problems_lead %}The plumbing and fitting stages of a new bathroom or full renovation.{% endblock %}
+{% block svc_problems %}
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Planning supply, waste and fixture positions before work starts</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>First-fix hot and cold supply pipework</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Waste runs and floor traps set with a workable fall</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>WC, washbasin, shower, mixer and health-faucet plumbing</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Concealed cistern and concealed valve plumbing connections</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Second-fix installation and testing of bathroom fittings</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Moving fixture positions where the existing waste and structure allow it</span></li>
+{% endblock %}
+
+{% block svc_process %}
+<li><b>Inspect and agree the plumbing scope</b><p>I check existing supply, waste, stack positions and access, then identify what can move and what should stay.</p></li>
+<li><b>Plan the sequence</b><p>First fix and pressure testing happen before pipework is covered. Electrical, tiling and waterproofing work remain separate and must be scheduled around that plumbing sequence.</p></li>
+<li><b>Install and test the first fix</b><p>Supply and waste runs are installed and tested while every joint is still accessible.</p></li>
+<li><b>Return for fittings and handover</b><p>When the surrounding surfaces are ready, I fit and connect the agreed bathroom items, test supply and drainage under use, and hand over my work.</p></li>
+{% endblock %}
+
+{% block svc_pricing %}
+<h3>How I price bathroom installation work</h3>
+<p>I quote the plumbing and directly related fitting scope after seeing the room and agreed layout. The figure depends on fixture count, moved positions, access, concealed work and whether you or I source the fittings.</p>
+<p style="margin-top:10px">Electrical work, tile installation and waterproofing are not included. Any referral to another tradesperson leads to a separate agreement with that person.</p>
+{% endblock %}
+
+{% block svc_related %}
+<a class="lcard" href="/services/wc-toilet-fittings/"><b>WC / Toilet Fittings</b><p>A focused installation or replacement without renovating the whole room.</p><span class="go">View WC fittings &rarr;</span></a>
+<a class="lcard" href="/services/washbasin-bath-accessories/"><b>Washbasin &amp; bath accessories</b><p>Basins, plumbing fittings, rails, mirrors, shelves and grab bars.</p><span class="go">View fittings &rarr;</span></a>
+<a class="lcard" href="/services/bathroom-tile-grouting/"><b>Bathroom tile grouting</b><p>Repairing grout on existing bathroom tiles as a separate service.</p><span class="go">View regrouting &rarr;</span></a>
+{% endblock %}
+
+{% block svc_form %}{% include "partials/lead_form.html" with prefill_service="New Bathroom Installation & Full Renovation" form_title="Ask about a bathroom project" form_title_tag="h3" %}{% endblock %}
+
+{% block svc_faq_heading %}Bathroom project questions{% endblock %}
+{% block svc_faq %}
+<details><summary>Does full renovation mean you do the electrical and tiling work?</summary><div class="answer"><p>No. My direct scope is plumbing and directly related fitting work. Electrical work, tile installation and waterproofing are separate specialist trades.</p></div></details>
+<details><summary>Can you help me find an electrician or tiler?</summary><div class="answer"><p>You can ask and I may point you to someone reliable, but that is an informal referral rather than a service I sell or manage. Their quote and agreement are separate.</p></div></details>
+<details><summary>When should the plumbing be tested?</summary><div class="answer"><p>Before it is covered. First-fix supply and waste pipework should be tested while joints remain accessible, then fittings are tested again at second fix.</p></div></details>
+<details><summary>Can you move the WC or basin?</summary><div class="answer"><p>Sometimes. It depends on the soil stack, waste route, available fall and structure. I confirm what is practical before the layout is treated as final.</p></div></details>
+{% endblock %}

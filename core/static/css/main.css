@@ -1,0 +1,629 @@
+/* =========================================================
+   BAJARANGI PLUMBING SERVICES — site stylesheet
+   Ported from PRD/index.html (prototype) per implementation_plan.md
+   §6 ("split the inline CSS/JS into base.html, page templates,
+   partials and static assets") and §11 Phase 2 ("port the
+   prototype into templates rather than rebuilding it").
+
+   Deliberate differences from the prototype, each traceable:
+   - Type: system font stack only, zero font downloads.
+     PRD §2.4 Type original rule; implementation_plan.md §9
+     typography bullet, option "drop back to the system stack".
+   - Nav CTA is NOT hidden on mobile. Removes the prototype rule
+     `.navbar .pill-orange{display:none}` — PRD §2.1 regression,
+     implementation_plan.md §9 "top design priority".
+   - Sticky bottom action bar added — PRD §2.2, previously
+     NOT BUILT / "single most important conversion element".
+   - Touch targets: burger 48px, consent row 48px — closes the
+     two sub-48px gaps named in implementation_plan.md §9.
+   - Marquees can be paused when off-screen — closes the
+     "animate continuously regardless of scroll position" miss
+     in PRD §2.4 Motion.
+   ========================================================= */
+
+:root{
+  color-scheme:light;
+  --navy:#14306E;          /* headline navy */
+  --navy-deep:#0E1D3F;     /* dark sections / footer */
+  --ink:#233047;
+  --grey:#5D6B7E;
+  --paper:#FDFDFB;
+  --lineart:#71818F;       /* line-art stroke */
+  --orange:#F5A733;        /* CTA pill */
+  --orange-deep:#E0912A;
+  --green:#2E6B4F;         /* call button */
+  --pipe-teal:#1E7FA0;
+  --pipe-cyan:#8AD4E0;
+  --pipe-blue:#2358A8;
+  --pipe-orange:#F2A03B;
+  --band-rose:#E9CFCB;
+  --band-lav:#CBD3E3;
+  --band-cyan:#D5E7E6;
+  --beige:#DFD5C5;         /* form card */
+  --beige-field:#EDE7DA;
+  --card-yellow:#F6E7B2;
+  --card-blue:#C9DDF1;
+  --wa:#25D366;
+  --focus:#2358A8;
+  --err:#A33B22;
+  --err-line:#C4633F;
+  /* Amber dark enough to be READ, not just seen. --orange-deep #E0912A
+     is 2.54:1 on white, which fails WCAG 1.4.3 for text and 1.4.11 for a
+     meaningful UI glyph; it was being used for the FAQ +/- marker and the
+     numbered-step counters. #8A5B0F is 5.86:1 on white. --orange and
+     --orange-deep stay as they are for large fills and pill backgrounds,
+     where they are decorative rather than informational. */
+  --amber-text:#8A5B0F;
+  /* Focus ring for use on the dark sections (--navy-deep). --focus is
+     #2358A8, which is only 2.40:1 against #0E1D3F - an outline nobody can
+     locate is not a focus indicator. This is 12.19:1 on the same ground. */
+  --focus-on-dark:#FFD79A;
+  /* System stack only — zero font downloads (PRD §2.4 Type).
+     Archivo / DM Sans are named first so a machine that already
+     has them installed still gets the intended face, but nothing
+     is ever fetched over the network. */
+  --disp:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--paper);line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--disp);color:var(--navy);line-height:1.04;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img,svg{display:block;max-width:100%}
+.wrap{max-width:1240px;margin-inline:auto;padding-inline:clamp(18px,4vw,44px)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:8px}
+/* WCAG 1.4.11. The five dark-background regions need the light ring:
+   #2358A8 on #0E1D3F is 2.40:1, so a keyboard user genuinely could not
+   see where they were in the footer, the method band, the gallery, the
+   emergency band or the mobile action bar. */
+.method :focus-visible,
+.gallery :focus-visible,
+.emergency :focus-visible,
+.actionbar :focus-visible,
+footer :focus-visible{outline-color:var(--focus-on-dark)}
+.skip{position:absolute;top:-60px;left:16px;z-index:400;background:var(--navy);color:#fff;
+  padding:10px 16px;border-radius:10px;transition:top .2s}
+.skip:focus{top:12px}
+.sr{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+
+/* ---------- pills / buttons ---------- */
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:.55em;font-family:var(--disp);
+  font-weight:700;border-radius:999px;padding:.9em 1.6em;font-size:1rem;line-height:1;cursor:pointer;
+  border:0;transition:transform .18s,box-shadow .18s,background .18s;min-height:48px;text-align:center}
+.pill:hover{transform:translateY(-2px)}
+.pill-orange{background:var(--orange);color:#3A2A08;box-shadow:0 10px 26px -12px rgba(224,145,42,.8)}
+.pill-orange:hover{background:var(--orange-deep)}
+.pill-navy{background:var(--navy-deep);color:#fff;letter-spacing:.08em;font-size:.92rem;text-transform:uppercase}
+.pill-navy[disabled]{opacity:.55;cursor:not-allowed;transform:none}
+.pill-green{background:var(--green);color:#fff}
+.pill-ghost{background:transparent;color:var(--navy);font-weight:700}
+.pill-ghost:hover{background:rgba(20,48,110,.06)}
+.pill-light{background:#fff;color:var(--navy);border:1.5px solid rgba(20,48,110,.16)}
+.pill svg{width:1.1em;height:1.1em;flex:none}
+
+/* ---------- floating rounded nav ---------- */
+.navbar{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:200;
+  width:min(1180px,calc(100% - 24px));display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+  border:1.5px solid rgba(20,48,110,.1);border-radius:999px;padding:10px 12px 10px 22px;
+  box-shadow:0 12px 40px -18px rgba(14,29,63,.35)}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:900;
+  font-size:1.15rem;color:var(--navy);letter-spacing:.02em;margin-right:auto;text-transform:uppercase}
+.logo svg{width:30px;height:30px;flex:none}
+.nav-links{display:flex;gap:6px;margin-right:8px}
+.nav-links a{font-weight:700;color:var(--ink);padding:.55em 1em;border-radius:999px;font-size:.98rem}
+.nav-links a:hover{background:rgba(20,48,110,.07);color:var(--navy)}
+.nav-links a[aria-current="page"]{background:rgba(20,48,110,.1);color:var(--navy)}
+.burger{display:none;width:48px;height:48px;border-radius:999px;border:0;background:var(--navy);
+  color:#fff;cursor:pointer;align-items:center;justify-content:center;flex:none}
+.burger svg{width:20px;height:20px}
+.nav-cta-label-short{display:none}
+
+@media(max-width:920px){
+  .nav-links{position:absolute;top:calc(100% + 10px);left:0;right:0;flex-direction:column;
+    background:#fff;border:1.5px solid rgba(20,48,110,.1);border-radius:24px;padding:12px;
+    box-shadow:0 20px 50px -20px rgba(14,29,63,.4);opacity:0;visibility:hidden;
+    transform:translateY(-8px);transition:.22s;margin-right:0}
+  .nav-links.open{opacity:1;visibility:visible;transform:none}
+  .nav-links a{padding:.9em 1.1em;min-height:48px;display:flex;align-items:center}
+  .burger{display:inline-flex}
+  /* The prototype hid the nav CTA here. It must never collapse —
+     PRD §2.2 / implementation_plan.md §9. Instead it shrinks. */
+  .navbar{padding-left:16px;gap:8px}
+  .navbar .pill-orange{padding:.85em 1.05em;font-size:.9rem}
+  .navbar .nav-cta-label-full{display:none}
+  .navbar .nav-cta-label-short{display:inline}
+  .logo{font-size:1rem}
+}
+@media(max-width:420px){
+  /* Was `display:none`, which was a WCAG 2.4.4 / 4.1.2 failure: the logo
+     anchor's only other child is an aria-hidden SVG, so on a narrow phone
+     the link to the home page had NO accessible name at all - a screen
+     reader announced "link" and nothing else.
+
+     Visually hidden instead of removed, so the name stays in the
+     accessibility tree while the layout still gets its space back. This
+     is the same declaration as the .sr utility; it is written out rather
+     than sharing the class because the class is applied in templates and
+     this is a responsive state. */
+  .logo span.logo-word{position:absolute;width:1px;height:1px;
+    clip:rect(0,0,0,0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+}
+
+/* ---------- sticky mobile action bar (PRD §2.2) ---------- */
+.actionbar{position:fixed;left:0;right:0;bottom:0;z-index:250;display:none;
+  border-top:1.5px solid rgba(255,255,255,.14);
+  box-shadow:0 -10px 30px -14px rgba(14,29,63,.5)}
+.actionbar a{flex:1 1 50%;display:flex;align-items:center;justify-content:center;gap:.5em;
+  min-height:60px;padding:.7em 1em;font-family:var(--disp);font-weight:800;font-size:1rem;
+  letter-spacing:.02em;color:#fff}
+.actionbar .ab-call{background:var(--green)}
+.actionbar .ab-wa{background:var(--navy-deep)}
+.actionbar a svg{width:22px;height:22px;flex:none}
+@media(max-width:767px){
+  .actionbar{display:flex}
+  /* keep the footer clear of the bar */
+  body{padding-bottom:60px}
+}
+
+/* ---------- scenery / fixed line-art background ---------- */
+.scenery{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.scenery svg{position:absolute}
+section{position:relative}
+section > .wrap{position:relative;z-index:2}
+.page-bg{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden;background:var(--paper)}
+.page-bg .layer{position:absolute;left:0;width:100%;will-change:transform}
+.page-bg .sky{top:0;height:100%}
+.page-bg .city{bottom:0;width:120%;left:-10%}
+.page-bg .temple{bottom:0;right:-4%;left:auto;width:min(46vw,620px)}
+.tint{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(253,253,251,.55),rgba(253,253,251,.1) 30%,rgba(253,253,251,.6))}
+
+/* ---------- 3D scroll pipe rig ---------- */
+.piperig{perspective:1200px;perspective-origin:60% 40%}
+.piperig svg{transform-style:preserve-3d;will-change:transform}
+.pipe-draw{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.pipe-shadow{fill:none;stroke:rgba(14,29,63,.18);stroke-linecap:round}
+.pipe-hl{fill:none;stroke:rgba(255,255,255,.55);stroke-linecap:round}
+.joint{opacity:0;transition:opacity .3s}
+.joint.on{opacity:1}
+.cap{opacity:0;transform-origin:center;transition:opacity .4s}
+.cap.on{opacity:1}
+
+/* ---------- reveal + motion prefs ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- hero (home) ---------- */
+.hero{padding:170px 0 40px;min-height:92vh}
+.hero h1{font-size:clamp(2.6rem,6.6vw,5.2rem);font-weight:900;text-transform:uppercase;max-width:12ch}
+.hero .sub{max-width:46ch;font-size:1.13rem;color:var(--grey);margin:26px 0 30px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid rgba(20,48,110,.14);
+  border-radius:999px;padding:.55em 1.1em;font-family:var(--disp);font-weight:700;font-size:.85rem;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.06em;margin-bottom:22px}
+.hero-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
+.hero-pipes{position:absolute;top:90px;right:-40px;width:min(58vw,760px);height:calc(100% - 60px);
+  z-index:1;pointer-events:none}
+@media(max-width:880px){
+  .hero{padding-top:130px;min-height:0}
+  .hero-pipes{position:relative;top:0;right:0;width:100%;height:340px;margin-top:10px}
+}
+
+/* ---------- compact page header (inner pages) ---------- */
+.pagehead{padding:150px 0 46px}
+.pagehead h1{font-size:clamp(2.1rem,5.2vw,3.9rem);font-weight:900;text-transform:uppercase;max-width:22ch}
+.pagehead .promise{max-width:52ch;font-size:1.12rem;color:var(--grey);margin:22px 0 28px}
+.pagehead .eyebrow{display:inline-flex;align-items:center;gap:10px;background:#fff;
+  border:1.5px solid rgba(20,48,110,.14);border-radius:999px;padding:.5em 1.05em;
+  font-family:var(--disp);font-weight:700;font-size:.78rem;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.08em;margin-bottom:18px}
+@media(max-width:880px){.pagehead{padding-top:120px}}
+
+/* ---------- breadcrumb ---------- */
+.crumb{padding-top:112px}
+.crumb ol{list-style:none;display:flex;flex-wrap:wrap;gap:.5em;font-size:.85rem;color:var(--grey);font-weight:600}
+.crumb li{display:flex;align-items:center;gap:.5em}
+.crumb li+li::before{content:"›";color:#9AA5B4}
+.crumb a{text-decoration:underline;text-underline-offset:3px}
+.crumb a:hover{color:var(--navy)}
+.crumb [aria-current="page"]{color:var(--navy)}
+@media(max-width:880px){.crumb{padding-top:96px}}
+.crumb + .pagehead{padding-top:26px}
+
+/* ---------- generic prose block ---------- */
+.prose{max-width:70ch}
+.prose h2{font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;margin:44px 0 14px}
+.prose h3{font-size:clamp(1.15rem,2.2vw,1.5rem);font-weight:800;margin:30px 0 10px}
+.prose p{margin-bottom:16px;color:var(--ink)}
+.prose p.lead{font-size:1.12rem;color:var(--grey)}
+.prose ul,.prose ol{margin:0 0 18px 1.15em;color:var(--ink)}
+.prose li{margin-bottom:8px}
+.prose a{text-decoration:underline;text-underline-offset:3px;color:var(--focus);font-weight:600}
+.prose strong{color:var(--navy)}
+.prose > :first-child{margin-top:0}
+
+.section{padding:66px 0}
+.section-tight{padding:44px 0}
+.section h2{font-size:clamp(1.8rem,4vw,2.9rem);font-weight:800}
+.section .lead{color:var(--grey);max-width:56ch;margin-top:16px;font-size:1.06rem}
+.kicker{font-family:var(--disp);font-weight:800;color:var(--navy);
+  font-size:clamp(1.6rem,3.4vw,2.4rem);text-align:center;margin-bottom:34px}
+.eyebrow-line{font-family:var(--disp);font-weight:800;font-size:.76rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--grey);margin-bottom:12px}
+
+/* ---------- request / quote section + form card ---------- */
+.request{padding:70px 0 90px}
+.request-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:start}
+.request h2{font-size:clamp(2.1rem,4.6vw,3.4rem);font-weight:800}
+.request .sub{color:var(--grey);font-size:1.05rem;max-width:40ch;margin:18px 0 26px}
+.emg{display:inline-flex;align-items:center;gap:12px;background:var(--navy-deep);color:#fff;
+  border-radius:999px;padding:.8em 1.5em;min-height:48px}
+.emg svg{width:22px;height:22px;flex:none}
+.emg small{display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;opacity:.7}
+.emg b{font-family:var(--disp);font-size:1.05rem;letter-spacing:.02em}
+.req-pipes{position:absolute;top:-120px;right:6%;width:min(46vw,560px);height:300px;z-index:1;pointer-events:none}
+@media(max-width:880px){.request-grid{grid-template-columns:1fr}.req-pipes{display:none}}
+
+.qcard{position:relative;background:var(--beige);border-radius:34px;padding:clamp(24px,3.6vw,40px);
+  box-shadow:0 30px 70px -30px rgba(14,29,63,.45);z-index:2}
+[data-booking-form]{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem}
+[data-booking-form] > .form-group--full,[data-booking-form] > .form-grid-full{grid-column:span 2}
+[data-booking-form] > .form-group--half{grid-column:span 1}
+[data-booking-form] .form-group{display:flex;flex-direction:column;gap:.25rem;min-width:0}
+[data-booking-form] .form-group > label{margin:0}
+[data-booking-form] .form-group > .err{margin-top:0}
+[data-booking-form] > .wa-note,[data-booking-form] > .form-ok{margin-top:0}
+.qcard h2,.qcard h3{font-size:clamp(1.3rem,2.6vw,1.7rem);font-weight:800;margin-bottom:6px}
+.qcard .card-sub{font-size:.92rem;color:#5A4F3C;margin-bottom:8px}
+.qcard label{display:block;font-family:var(--disp);font-weight:700;font-size:.74rem;letter-spacing:.14em;
+  text-transform:uppercase;color:#5A4F3C;margin:18px 0 8px}
+.qcard label .opt{letter-spacing:.06em;opacity:.65;font-weight:500}
+.qcard .field:first-of-type label{margin-top:0}
+.qcard input,.qcard select,.qcard textarea{width:100%;border:0;background:var(--beige-field);
+  border-radius:999px;padding:.95em 1.3em;font:inherit;color:var(--ink);min-height:48px}
+.qcard textarea{border-radius:24px;min-height:110px;resize:vertical}
+.qcard input:focus,.qcard select:focus,.qcard textarea:focus{outline:3px solid var(--focus);outline-offset:1px}
+.qcard .err{display:none;color:var(--err);font-size:.82rem;font-weight:700;margin-top:6px}
+.qcard .field.bad input,.qcard .field.bad select,.qcard .field.bad textarea{outline:2px solid var(--err-line)}
+.qcard .field.bad .err{display:block}
+@media(max-width:520px){
+  [data-booking-form]{grid-template-columns:1fr}
+  [data-booking-form] > .form-group--full,
+  [data-booking-form] > .form-group--half,
+  [data-booking-form] > .form-grid-full{grid-column:1}
+}
+/* Honeypot. Positioned off-screen rather than display:none, and paired
+   with aria-hidden + tabindex="-1" in the markup, so neither a human nor
+   a screen reader ever meets it. See partials/lead_form.html. */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+/* align-items:flex-start, not center: the consent label is now two or
+   three lines of text on a phone, and centring pulled the checkbox to the
+   vertical middle of the block instead of lining it up with the first
+   line. */
+.qcard .consent{display:flex;gap:12px;align-items:flex-start;font-size:.85rem;color:#584D3A;
+  margin:18px 0 8px;min-height:48px;cursor:pointer}
+/* Secondary consent text: purpose, withdrawal, links. #5A4F3C on the
+   beige card is 5.52:1. */
+.qcard .consent-detail{font-size:.8rem;color:#5A4F3C;margin:0 0 16px;line-height:1.5}
+.qcard .consent-detail a{text-decoration:underline;text-underline-offset:2px;font-weight:700}
+/* Error summary. :empty keeps it out of the layout until the script fills
+   it in, so role="alert" cannot fire on page load. #8C2F19 on #FBE9E4 is
+   7.03:1. */
+.form-err-summary{margin:4px 0 12px;background:#FBE9E4;color:#8C2F19;border-radius:14px;
+  padding:11px 14px;font-weight:700;font-size:.86rem}
+.form-err-summary:empty{display:none}
+.qcard .consent input{width:24px;height:24px;min-height:24px;accent-color:var(--navy);flex:none;border-radius:6px}
+.qcard .pill-navy{width:100%}
+.wa-note{display:flex;gap:10px;margin-top:16px;background:rgba(255,255,255,.55);border-radius:18px;
+  padding:12px 14px;font-size:.86rem;color:#4A4131}
+.wa-note svg{width:19px;height:19px;flex:none;color:var(--green);margin-top:2px}
+.form-ok{display:none;margin-top:14px;background:#DFF0E4;color:#1E5B3C;border-radius:18px;
+  padding:12px 16px;font-weight:700;font-size:.9rem}
+.form-ok.show{display:block}
+.form-ok a{text-decoration:underline;text-underline-offset:3px}
+.form-err-api{display:none;margin-top:14px;background:#FBEAEA;color:#7A1B1B;border-radius:18px;
+  padding:12px 16px;font-weight:600;font-size:.88rem}
+.form-err-api.show{display:block}
+.form-noscript{margin-top:16px;background:#FBEFD9;color:#6B4B12;border-radius:18px;
+  padding:14px 16px;font-size:.88rem;font-weight:600}
+.form-noscript a{text-decoration:underline;text-underline-offset:3px}
+.form-noscript .pill{margin-top:10px;margin-right:8px}
+
+/* ---------- services bands ---------- */
+.services{padding:80px 0 0}
+.band{position:relative;padding:clamp(30px,5vw,58px) 0;z-index:2}
+.band h3{font-size:clamp(1.5rem,4.6vw,3.4rem);font-weight:900;text-transform:uppercase;
+  text-align:center;letter-spacing:.01em}
+.band-rose{background:rgba(233,207,203,.82)}
+.band-lav{background:rgba(203,211,227,.82)}
+.band-cyan{background:rgba(213,231,230,.82)}
+.band-links{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px;
+  position:relative;z-index:2}
+.band-links a{display:inline-flex;align-items:center;min-height:48px;padding:.7em 1.2em;
+  background:rgba(255,255,255,.85);border:1.5px solid rgba(20,48,110,.14);border-radius:999px;
+  font-family:var(--disp);font-weight:700;font-size:.95rem;color:var(--navy)}
+.band-links a:hover{background:#fff;transform:translateY(-2px)}
+.rail{overflow:hidden;padding:20px 0;position:relative;z-index:2}
+.rail-track{display:flex;gap:44px;width:max-content;animation:rail 30s linear infinite;white-space:nowrap}
+.rail[data-dir="r"] .rail-track{animation-direction:reverse}
+.rail:hover .rail-track,.rail.paused .rail-track{animation-play-state:paused}
+/* was #8E9AA9 = 2.81:1 on --paper, failing even the 3:1 large-text
+   threshold. --grey is 5.33:1. */
+.rail span{font-family:var(--disp);font-weight:700;font-size:clamp(1.1rem,2.4vw,1.7rem);
+  color:var(--grey);display:flex;align-items:center;gap:44px}
+.rail span::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--pipe-orange);flex:none}
+@keyframes rail{to{transform:translateX(-50%)}}
+.waves{display:block;width:100%;height:110px;margin-bottom:-2px}
+
+/* ---------- dark method section ---------- */
+.method{background:var(--navy-deep);color:#fff;padding:110px 0 70px;overflow:hidden}
+.method-head{position:relative;z-index:3;text-align:center;max-width:900px;margin:0 auto 60px}
+.method-head h2{color:#fff;font-size:clamp(1.9rem,5vw,3.6rem);font-weight:900;text-transform:uppercase;line-height:1.12}
+.method-head .w1{color:#6FA8DC}.method-head .w2{color:var(--orange)}.method-head .w3{color:#E8704A}
+.method-head p{color:rgba(255,255,255,.65);margin-top:22px;font-size:1.06rem;max-width:52ch;margin-inline:auto}
+.m-dot{position:absolute;border-radius:50%;z-index:1}
+.m-photo{position:absolute;z-index:2;width:clamp(120px,16vw,230px);aspect-ratio:3/4;border-radius:14px;
+  background:linear-gradient(160deg,#1B3559,#12233F);border:1px solid rgba(255,255,255,.14);
+  display:grid;place-items:center;box-shadow:0 24px 60px -20px rgba(0,0,0,.6)}
+/* was rgba(255,255,255,.45), under 4.5:1 against the tile gradient at
+   .68rem. .82 clears it comfortably. */
+.m-photo span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);text-align:center;padding:8px}
+.method-pipes{position:absolute;inset:0;z-index:1;pointer-events:none}
+.method-photos{position:absolute;inset:0;z-index:2;pointer-events:none}
+.method-steps{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.mstep{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px}
+.mstep b{font-family:var(--disp);font-size:1.2rem;display:block;margin-bottom:8px}
+.mstep:nth-child(1) b{color:#6FA8DC}.mstep:nth-child(2) b{color:var(--orange)}.mstep:nth-child(3) b{color:#E8704A}
+.mstep p{color:rgba(255,255,255,.68);font-size:.95rem}
+@media(max-width:760px){
+  .method-steps{grid-template-columns:1fr}
+  /* The prototype set `.m-photo{display:none}` here, so on a phone the
+     method section showed no photographic evidence at all - flagged in
+     PRD §2.4/§5 as one of the breakpoints that *removes* content on
+     small screens, "the opposite of mobile-first". Instead of hiding
+     them, the absolutely-placed tiles reflow into a static strip below
+     the steps. The container sits after .wrap in the DOM so this needs
+     no duplicated markup. */
+  .method-photos{position:static;display:grid;grid-template-columns:1fr 1fr;
+    gap:12px;margin-top:28px;z-index:3;pointer-events:auto}
+  .m-photo{position:static;inset:auto !important;width:auto;aspect-ratio:4/3;
+    transform:none !important}
+  .m-photo:last-child{grid-column:1 / -1}
+}
+
+/* ---------- arc carousel gallery ---------- */
+.gallery{background:var(--navy-deep);padding:40px 0 90px;overflow:hidden}
+.gallery h2{color:#fff;font-size:clamp(1.6rem,3.6vw,2.5rem);font-weight:800;text-align:center;margin-bottom:8px}
+.gallery .gsub{color:rgba(255,255,255,.6);text-align:center;max-width:50ch;margin:0 auto 34px;font-size:.98rem}
+.car-stage{position:relative;height:340px;display:flex;align-items:center;justify-content:center}
+.car-card{position:absolute;width:250px;aspect-ratio:1/1.05;border-radius:16px;overflow:hidden;
+  background:linear-gradient(150deg,#274670,#152A4A);border:1px solid rgba(255,255,255,.15);
+  display:grid;place-items:center;transition:transform .6s cubic-bezier(.3,.7,.3,1),opacity .6s;
+  box-shadow:0 26px 60px -22px rgba(0,0,0,.65);padding:14px;text-align:center}
+/* was rgba(255,255,255,.5) = 3.69:1 on the card gradient; .7rem text
+   needs 4.5:1. .82 gives 6.53:1. */
+.car-card span{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.82)}
+.car-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:30px}
+.car-btn{width:52px;height:52px;border-radius:50%;border:0;background:#1B3559;color:#fff;cursor:pointer;
+  display:grid;place-items:center;transition:background .2s,transform .2s;flex:none}
+.car-btn:hover{background:#27477A;transform:translateY(-2px)}
+.car-btn svg{width:20px;height:20px}
+.car-status{color:rgba(255,255,255,.6);font-size:.85rem;font-weight:700;min-width:8ch;text-align:center}
+.gallery .story{color:rgba(255,255,255,.55);text-align:center;font-size:clamp(1.2rem,2.6vw,1.9rem);
+  font-family:var(--disp);font-weight:600;max-width:34ch;margin:60px auto 0;line-height:1.4}
+
+/* ---------- reviews / areas-served section ---------- */
+/* The testimonial-card styles that used to live here have been deleted
+   along with the fabricated reviews they rendered (compliance review,
+   September 2026): .rev-grid, .rcards, .rcard, .rc1-.rc3, .gbadge and
+   the whole .proofgrid / .proofquote block from the service pages.
+   Two of those rules were themselves contrast failures - the "Sample"
+   .tag at #9AA5B4 on pale yellow (~2:1) and the --orange-deep star
+   glyphs (2.2:1) - so removing the content removed the defect.
+
+   .reviews itself stays: the section still carries the "Areas served"
+   chips and the calls to action, now in a single full-width column.
+   --card-yellow and --card-blue are left defined but unused; they are
+   the palette's, not this component's. */
+.reviews{padding:110px 0;overflow:hidden}
+.reviews h2{font-size:clamp(2.1rem,4.8vw,3.6rem);font-weight:800;margin:22px 0 16px}
+.reviews .sub{color:var(--grey);max-width:60ch;margin-bottom:28px}
+
+/* ---------- chips (area / service link lists) ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;list-style:none}
+.chips a{display:inline-flex;align-items:center;min-height:48px;padding:.6em 1.15em;background:#fff;
+  border:1.5px solid rgba(20,48,110,.14);border-radius:999px;font-weight:700;font-size:.93rem;color:var(--navy)}
+.chips a:hover{background:rgba(20,48,110,.06);transform:translateY(-2px)}
+.chips li.plain{display:inline-flex;align-items:center;min-height:48px;padding:.6em 1.15em;
+  color:var(--grey);font-size:.93rem}
+
+/* ---------- stats / timeline ---------- */
+.stats{padding:40px 0 90px}
+/* auto-fit rather than a fixed column count, so the row stays balanced
+   whether it holds two stats or three. */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:30px;text-align:center}
+.stat b{font-family:var(--disp);font-weight:900;font-size:clamp(2.6rem,6vw,4.4rem);color:var(--navy);
+  display:block;line-height:1}
+.stat span{color:var(--grey);font-size:.95rem;display:block;margin-top:10px;max-width:22ch;margin-inline:auto}
+@media(max-width:680px){.stats-row{grid-template-columns:1fr;gap:34px}}
+
+.timeline{list-style:none;margin-top:30px;border-left:2px solid rgba(20,48,110,.14);padding-left:26px}
+.timeline li{position:relative;padding-bottom:26px}
+.timeline li::before{content:"";position:absolute;left:-34px;top:6px;width:14px;height:14px;
+  border-radius:50%;background:var(--orange);border:3px solid var(--paper)}
+.timeline b{font-family:var(--disp);color:var(--navy);font-size:1.05rem;display:block}
+.timeline span{color:var(--grey);font-size:.95rem}
+
+/* ---------- checklist ---------- */
+.checklist{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 26px;margin-top:24px}
+.checklist li{display:flex;gap:12px;align-items:flex-start;font-size:1rem}
+.checklist li svg{width:22px;height:22px;flex:none;color:var(--green);margin-top:2px}
+@media(max-width:680px){.checklist{grid-template-columns:1fr}}
+
+/* ---------- numbered process ---------- */
+.process{list-style:none;counter-reset:step;display:grid;gap:16px;margin-top:28px}
+.process li{counter-increment:step;background:#fff;border:1.5px solid rgba(20,48,110,.1);
+  border-radius:22px;padding:22px 24px 22px 74px;position:relative;
+  box-shadow:0 18px 44px -30px rgba(14,29,63,.4)}
+/* Step numbers are content, not decoration - they carry the ordering.
+   --orange-deep was 2.54:1 on white. */
+.process li::before{content:"0" counter(step);position:absolute;left:24px;top:20px;
+  font-family:var(--disp);font-weight:900;font-size:1.3rem;color:var(--amber-text)}
+.process b{font-family:var(--disp);color:var(--navy);font-size:1.08rem;display:block;margin-bottom:4px}
+.process p{color:var(--grey);font-size:.97rem}
+
+/* ---------- info / pricing note ---------- */
+.note{background:#fff;border:1.5px solid rgba(20,48,110,.12);border-left:6px solid var(--orange);
+  border-radius:20px;padding:24px 26px;margin-top:26px;box-shadow:0 18px 44px -30px rgba(14,29,63,.4)}
+/* h2 is listed alongside h3 because the area pages' note heading was
+   promoted from h3 to h2 to fix a heading-level skip after the h1. The
+   note is a sidebar-weight component regardless of its heading level, so
+   both render at the same size - without this, an h2 here would fall back
+   to the browser default 1.5em and jump. */
+.note h2,.note h3{font-size:1.15rem;font-weight:800;margin-bottom:8px}
+.note p{color:var(--grey);margin-bottom:10px}
+.note p:last-child{margin-bottom:0}
+.note ul{margin:10px 0 0 1.15em;color:var(--grey)}
+.note li{margin-bottom:6px}
+.note.note-warn{border-left-color:var(--err-line)}
+
+/* ---------- promise tiles ---------- */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:30px}
+.tile{background:#fff;border:1.5px solid rgba(20,48,110,.1);border-radius:22px;padding:24px;
+  box-shadow:0 18px 44px -30px rgba(14,29,63,.4)}
+.tile svg{width:30px;height:30px;color:var(--navy);margin-bottom:12px}
+.tile b{font-family:var(--disp);color:var(--navy);font-size:1.05rem;display:block;margin-bottom:6px}
+.tile p{color:var(--grey);font-size:.94rem}
+@media(max-width:960px){.tiles{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.tiles{grid-template-columns:1fr}}
+
+/* ---------- card grid (related services / team / photos) ---------- */
+.cardgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.cardgrid-2{grid-template-columns:repeat(2,1fr)}
+.lcard{display:block;background:#fff;border:1.5px solid rgba(20,48,110,.1);border-radius:22px;padding:22px;
+  box-shadow:0 18px 44px -30px rgba(14,29,63,.4);transition:transform .18s,box-shadow .18s}
+a.lcard:hover{transform:translateY(-3px);box-shadow:0 26px 56px -30px rgba(14,29,63,.5)}
+.lcard b{font-family:var(--disp);color:var(--navy);font-size:1.06rem;display:block;margin-bottom:6px}
+.lcard p{color:var(--grey);font-size:.94rem}
+.lcard .go{display:inline-block;margin-top:12px;font-weight:700;color:var(--focus);
+  text-decoration:underline;text-underline-offset:3px;font-size:.92rem}
+@media(max-width:880px){.cardgrid,.cardgrid-2{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.cardgrid,.cardgrid-2{grid-template-columns:1fr}}
+
+.photogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.photoslot{background:linear-gradient(160deg,#E7E2DA,#D8D2C6);border:1.5px solid rgba(20,48,110,.12);
+  border-radius:18px;aspect-ratio:4/3;display:grid;place-items:center;padding:14px;text-align:center}
+/* was #6E6552 = 3.83:1 on the darker end of the slot gradient. */
+.photoslot span{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#57503F;font-weight:700}
+.photogrid figure{margin:0}
+.photogrid figcaption{margin-top:10px;font-size:.87rem;color:var(--grey)}
+@media(max-width:880px){.photogrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.photogrid{grid-template-columns:1fr}}
+
+/* ---------- FAQ ---------- */
+.faq{margin-top:26px;max-width:80ch}
+.faq details{background:#fff;border:1.5px solid rgba(20,48,110,.1);border-radius:20px;
+  padding:0;margin-bottom:12px;overflow:hidden}
+.faq summary{list-style:none;cursor:pointer;padding:20px 24px;min-height:48px;display:flex;
+  align-items:center;justify-content:space-between;gap:16px;
+  font-family:var(--disp);font-weight:700;color:var(--navy);font-size:1.02rem}
+.faq summary::-webkit-details-marker{display:none}
+/* The +/- marker is the only thing conveying expanded state visually, so
+   it is a UI component under 1.4.11 and needs 3:1. --orange-deep gave
+   2.54:1 on white. */
+.faq summary::after{content:"+";font-size:1.5rem;line-height:1;color:var(--amber-text);flex:none}
+.faq details[open] summary::after{content:"–"}
+.faq summary:hover{background:rgba(20,48,110,.04)}
+.faq .answer{padding:0 24px 22px;color:var(--grey)}
+.faq .answer p{margin-bottom:10px}
+.faq .answer p:last-child{margin-bottom:0}
+
+/* ---------- emergency band ---------- */
+.emergency{background:var(--navy-deep);color:#fff;padding:60px 0;overflow:hidden}
+.emergency-inner{display:flex;align-items:center;gap:30px;flex-wrap:wrap;justify-content:space-between}
+.emergency h2{color:#fff;font-size:clamp(1.7rem,4vw,2.8rem);font-weight:900;text-transform:uppercase;max-width:20ch}
+.emergency p{color:rgba(255,255,255,.66);max-width:42ch;margin-top:14px}
+.emergency .cta{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- CTA band ---------- */
+.ctaband{background:var(--band-lav);padding:64px 0}
+.ctaband-inner{display:flex;align-items:center;gap:28px;flex-wrap:wrap;justify-content:space-between}
+.ctaband h2{font-size:clamp(1.6rem,3.6vw,2.6rem);font-weight:900;text-transform:uppercase;max-width:24ch}
+.ctaband p{color:#40506B;max-width:44ch;margin-top:12px}
+.ctaband .cta{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- contact channel tiles ---------- */
+.channels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.channel{display:flex;flex-direction:column;gap:8px;background:#fff;border:1.5px solid rgba(20,48,110,.1);
+  border-radius:22px;padding:24px;min-height:48px;box-shadow:0 18px 44px -30px rgba(14,29,63,.4);
+  transition:transform .18s,box-shadow .18s}
+a.channel:hover{transform:translateY(-3px);box-shadow:0 26px 56px -30px rgba(14,29,63,.5)}
+.channel svg{width:30px;height:30px;flex:none}
+.channel .ch-call{color:var(--green)}
+.channel b{font-family:var(--disp);color:var(--navy);font-size:1.1rem}
+.channel span{color:var(--grey);font-size:.92rem}
+@media(max-width:880px){.channels{grid-template-columns:1fr}}
+
+/* ---------- hours + address ---------- */
+.hours{list-style:none;margin-top:14px}
+.hours li{display:flex;justify-content:space-between;gap:20px;padding:10px 0;
+  border-bottom:1px dashed rgba(20,48,110,.16);font-size:.98rem;max-width:44ch}
+.hours li:last-child{border-bottom:0}
+.hours b{font-family:var(--disp);color:var(--navy);font-weight:700}
+address{font-style:normal;color:var(--ink);line-height:1.7}
+address .pending{display:inline-block;background:#FBEFD9;color:#6B4B12;border-radius:8px;
+  padding:2px 8px;font-size:.82rem;font-weight:700}
+.mapslot{margin-top:22px;background:linear-gradient(160deg,#E7E2DA,#D8D2C6);
+  border:1.5px solid rgba(20,48,110,.12);border-radius:22px;aspect-ratio:16/9;
+  display:grid;place-items:center;padding:20px;text-align:center}
+/* same fix as .photoslot span - 3.83:1 to 5.31:1 */
+.mapslot span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#57503F;font-weight:700}
+
+/* ---------- footer ---------- */
+footer{background:var(--navy-deep);color:#fff;padding-top:56px;overflow:hidden}
+.foot-row{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding-bottom:40px}
+.foot-row .logo{color:#fff;margin-right:auto}
+.foot-contact{display:flex;align-items:center;gap:26px;flex-wrap:wrap;font-weight:700}
+.foot-contact a{min-height:48px;display:inline-flex;align-items:center}
+.foot-contact a:hover{color:var(--orange)}
+.foot-nav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:30px;
+  padding:0 0 40px;border-top:1px solid rgba(255,255,255,.12);padding-top:40px}
+.foot-nav h2{color:#fff;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:800;margin-bottom:14px;opacity:.65}
+.foot-nav ul{list-style:none}
+.foot-nav li{margin-bottom:2px}
+.foot-nav a{display:inline-flex;align-items:center;min-height:44px;color:rgba(255,255,255,.82);font-size:.95rem}
+.foot-nav a:hover{color:var(--orange)}
+.foot-nav address{color:rgba(255,255,255,.82);font-size:.95rem}
+.foot-nav address a{min-height:0;display:inline}
+.foot-hours li{color:rgba(255,255,255,.82);font-size:.95rem;margin-bottom:8px}
+.foot-hours b{display:block;color:#fff;font-family:var(--disp);font-size:.9rem}
+@media(max-width:880px){.foot-nav{grid-template-columns:1fr 1fr;gap:22px}}
+@media(max-width:520px){.foot-nav{grid-template-columns:1fr}}
+
+.wordmark-strip{position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.12);padding:30px 0 10px}
+.wordmark-track{display:flex;flex-wrap:nowrap;width:max-content;animation:wordmark-scroll 24s linear infinite;will-change:transform}
+.wordmark-track.paused{animation-play-state:paused}
+.wordmark{display:block;flex:0 0 auto;width:2800px;height:220px;max-width:none}
+@keyframes wordmark-scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+.foot-bottom{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:26px 0 34px;font-size:.85rem;color:rgba(255,255,255,.55)}
+.foot-bottom a{text-decoration:underline;text-underline-offset:3px}
+.foot-bottom a:hover{color:var(--orange)}
+
+/* ---------- reduced motion: full opt-out ---------- */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+  .rv{opacity:1;transform:none}
+  .rail-track,.wordmark-track{transform:none}
+}

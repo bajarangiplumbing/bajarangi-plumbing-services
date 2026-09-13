@@ -1,0 +1,84 @@
+{% extends "pages/service_base.html" %}
+
+{% block title %}Washbasin &amp; Bath Accessories Fittings in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Washbasin and bathroom accessory fitting in Bhubaneswar: basins, taps, showers, mixers, angle valves, towel rails, mirrors, shelves and grab bars.{% endblock %}
+{% block canonical_path %}/services/washbasin-bath-accessories/{% endblock %}
+{% block og_path %}/services/washbasin-bath-accessories/{% endblock %}
+{% block og_title %}Washbasin &amp; Bath Accessories Fittings in Bhubaneswar{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Washbasin and bath accessories page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Washbasin & Bath Accessories Fittings",
+  "serviceType": "Washbasin and bathroom accessory fitting",
+  "url": "{{ site_url }}/services/washbasin-bath-accessories/",
+  "description": "Washbasin and bathroom accessory fitting in Bhubaneswar, including plumbing-connected fittings and non-plumbing accessories such as towel rails, mirrors, shelves and grab bars.",
+  "provider": { "@id": "{{ site_url }}/#business" },
+  "areaServed": { "@type": "City", "name": "Bhubaneswar" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "{{ site_url }}/#services" },
+    { "@type": "ListItem", "position": 3, "name": "Washbasin & Bath Accessories Fittings" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block crumb_label %}Washbasin &amp; Bath Accessories Fittings{% endblock %}
+{% block svc_h1 %}Washbasin &amp; bath accessories fittings{% endblock %}
+{% block svc_promise %}One careful fitting visit can finish the room: basin and taps connected properly, then the useful accessories mounted straight and securely.{% endblock %}
+
+{% block svc_intro %}
+<p class="lead">This service combines washbasin plumbing with the connected and non-plumbing accessories that complete a bathroom.</p>
+<p>I fit pedestal, counter-top and wall-hung basins; taps, mixers, showers, health faucets and angle valves; and accessories including towel rails, mirrors, shelves and grab bars. Before drilling, I check the fixing location and the surface so each item gets a suitable fixing rather than a screw chosen by habit.</p>
+<p>Electrical accessories and electrical connections are not included.</p>
+{% endblock %}
+
+{% block svc_problems_heading %}Basins and accessories I fit{% endblock %}
+{% block svc_problems_lead %}Plumbing-connected fittings and securely mounted bathroom accessories.{% endblock %}
+{% block svc_problems %}
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Pedestal, counter-top and wall-hung washbasins</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Basin taps, mixers, bottle traps and waste connections</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Overhead and hand showers, diverters and health faucets</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Bib taps, angle valves and other plumbing-connected accessories</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Towel rails, rings, hooks and bathroom shelves</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Mirrors and non-electrical mirror cabinets</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Grab bars fitted with fixings appropriate to the wall</span></li>
+{% endblock %}
+
+{% block svc_process %}
+<li><b>Check positions and surfaces</b><p>I confirm heights, clearances, pipe points and the wall or counter construction before drilling or connecting anything.</p></li>
+<li><b>Use the right fixing</b><p>A basin, grab bar and lightweight shelf do not take the same load. Each gets a fixing suited to the item and surface.</p></li>
+<li><b>Connect and seal plumbing</b><p>Supply and waste connections are assembled without strain, sealed correctly and left accessible where they should be.</p></li>
+<li><b>Align and test everything</b><p>Accessories are level and secure; plumbing fittings are run under normal pressure and checked for leaks and drainage.</p></li>
+{% endblock %}
+
+{% block svc_pricing %}
+<h3>How I price fitting work</h3>
+<p>I price by the number and type of fittings, the wall or counter surface, and whether usable plumbing points already exist. Several fittings completed in one visit are quoted together.</p>
+<p style="margin-top:10px">You may supply the fittings yourself. Send photographs or product links first so I can flag obvious compatibility issues before the visit.</p>
+{% endblock %}
+
+{% block svc_related %}
+<a class="lcard" href="/services/wc-toilet-fittings/"><b>WC / Toilet Fittings</b><p>Toilet, cistern, flush and nearby connection work.</p><span class="go">View WC fittings &rarr;</span></a>
+<a class="lcard" href="/services/bathroom-installation-renovation/"><b>Bathroom installation &amp; renovation</b><p>Plumbing and fitting work for a complete bathroom project.</p><span class="go">View bathroom work &rarr;</span></a>
+<a class="lcard" href="/services/bathroom-tile-grouting/"><b>Bathroom tile grouting</b><p>Repairing worn grout around existing bathroom tiles.</p><span class="go">View regrouting &rarr;</span></a>
+{% endblock %}
+
+{% block svc_form %}{% include "partials/lead_form.html" with prefill_service="Washbasin & Bath Accessories Fittings" form_title="Ask about fittings" form_title_tag="h3" %}{% endblock %}
+
+{% block svc_faq_heading %}Washbasin and accessory questions{% endblock %}
+{% block svc_faq %}
+<details><summary>Do you fit accessories that are not connected to water?</summary><div class="answer"><p>Yes. Towel rails, mirrors, shelves and grab bars are included, provided they can be safely fixed to the available surface.</p></div></details>
+<details><summary>Can I buy the basin and taps myself?</summary><div class="answer"><p>Yes. Send the model details first if possible, especially for wall-hung basins and concealed fittings where dimensions and support matter.</p></div></details>
+<details><summary>Do you fit illuminated mirrors or electrical accessories?</summary><div class="answer"><p>I can mount a suitable non-electrical item, but I do not make electrical connections. Any wiring belongs to a qualified electrician.</p></div></details>
+{% endblock %}

@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE 5 - Contact & Booking. §1.2 row 13, /contact/.
+implementation_plan.md §5 "Contact page: phone, WhatsApp, hours, map,
+booking request form, and service-area list";
+PRD_website_pages.md PAGE 5.
+
+PRD PAGE 5 records this as "[PARTLY BUILT as the #request section]"
+and names five gaps. All five are addressed here:
+  - [2] the planned three-tile "Call | WhatsApp | Request callback"
+    block, which the prototype did not have. PRD PAGE 5 notes "there is
+    no callback option anywhere on the site" and
+    implementation_plan.md §12 acceptance row 1 requires one, so the
+    third tile is a real callback request: it opens WhatsApp with
+    "please call me back" written out. WhatsApp delivers the sender's
+    own number with the message, so this is a complete callback request
+    and it needs no server. The server-side callback *lead record* is
+    still backend work (§5, §7).
+  - "[NOT BUILT] Full booking form" - built, see partials/booking_form.html.
+  - "[NOT BUILT] Hours + address + map" - hours are now in place on this
+    page as two separate blocks (working vs emergency, per §2.3), inside
+    a real <address> element with <time> markup. See the address and map
+    notes below for the two parts still blocked on business data.
+  - "[NOT BUILT] Area list in the contact section" - built. PRD PAGE 5:
+    "a visitor deciding whether to submit the form should be able to
+    confirm coverage without scrolling away from it".
+  - The h1: PRD PAGE 5 flags that the prototype's heading was an h2
+    "(not an H1 - this is a section, not a page)". This is a page, so it
+    has one. The prototype's exact heading and reassurance line are kept
+    verbatim as the h2 over the form.
+
+TWO ITEMS STILL BLOCKED ON BUSINESS DATA, not faked:
+  - Street / service address (§3 item 1). The <address> block carries
+    only what is verifiable. Until it is filled in, the NAP-consistency
+    requirement in implementation_plan.md §8 cannot be met.
+  - The map. Blocked on §3 item 1 and §3 item 9 (Google Business
+    Profile). A labelled placeholder is used rather than a map centred
+    on a guess.
+
+The confirmation copy on both forms says a handoff has happened, not
+that the business has received the request - implementation_plan.md §5
+requires the "received and will be confirmed" wording, and it would not
+be true until a server records the request.
+{% endcomment %}
+
+{% block title %}Contact &amp; Booking &mdash; Plumber in Bhubaneswar | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Call, WhatsApp or request a callback from an independent Bhubaneswar plumber. Short request form or a full booking form with your preferred date and time. Hours and areas covered.{% endblock %}
+{% block canonical_path %}/contact/{% endblock %}
+{% block og_path %}/contact/{% endblock %}
+{% block og_title %}Contact Bajarangi Plumbing Services &mdash; Plumber in Bhubaneswar{% endblock %}
+{% block header %}{% include "partials/header.html" with nav_active="contact" cta_href="#request" %}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Contact page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "url": "{{ site_url }}/contact/",
+  "name": "Contact Bajarangi Plumbing Services",
+  "description": "Contact details, opening hours, service areas and booking forms for Bajarangi Plumbing Services, an independent plumber in Bhubaneswar.",
+  "mainEntity": { "@id": "{{ site_url }}/#business" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Contact" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Contact</span></li>
+  </ol>
+</nav>
+
+<section class="pagehead">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot" style="width:9px;height:9px;border-radius:50%;background:#2E6B4F"></span>15+ years &middot; Bhubaneswar</span>
+    <h1>Contact Bajarangi Plumbing Services</h1>
+    <p class="promise">Three ways to reach me and two ways to book. Pick whichever suits &mdash; they
+      all arrive at the same phone, and I read every message myself.</p>
+  </div>
+</section>
+
+{% comment %} ---------- [2] CONTACT CHANNELS: CALL | WHATSAPP | CALLBACK ---------- {% endcomment %}
+<section class="section-tight">
+  <div class="wrap rv">
+    <h2>Reach me directly</h2>
+    <div class="channels">
+      <a class="channel" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">
+        <svg class="ch-call" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>
+        <b>Call</b>
+        <span>{{ phone_display|default:"+91 XXXXX XXXXX" }} &mdash; fastest for anything that is
+          actively leaking. Close your stop valve first.</span>
+      </a>
+      <a class="channel" href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I need a plumber in Bhubaneswar.{% endfilter %}">
+        <svg style="color:#25D366" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.7 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a12 12 0 0 1-5.6-4.9c-.4-.6-.7-1.4-.7-2 0-.6.3-1 .6-1.3.2-.2.4-.2.6-.2h.4c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.5l-.4.5c-.1.1-.2.3-.1.5.3.6.8 1.2 1.3 1.6.5.4 1 .6 1.3.8.2.1.4 0 .5-.1l.5-.6c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.4.3.1.2.1.5 0 .7Z"/></svg>
+        <b>WhatsApp</b>
+        <span>Opens a chat with me. Send a photo or a short video of the problem &mdash; it often means
+          I bring the right part first time.</span>
+      </a>
+      <a class="channel" href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, please call me back when you can. (Callback request from the contact page.){% endfilter %}">
+        <svg style="color:#F5A733" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/><path d="m16 3 5 5m0-5-5 5"/></svg>
+        <b>Request a callback</b>
+        <span>Can't talk now? Send this and I will ring you back. WhatsApp passes your number along
+          with the message, so there is nothing else to type.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+{% comment %} ---------- [3] WHATSAPP SERVICE-REQUEST FORM ---------- {% endcomment %}
+<section class="request" id="request">
+  <div class="wrap request-grid">
+    <div class="rv">
+      <h2>Request a precision quote</h2>
+      <p class="sub">Tell me what's wrong and I'll confirm a visit time. Transparent, itemised pricing
+        &mdash; no arrival time promised until I've spoken to you.</p>
+      <a class="emg" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>
+        <span><small>Emergency line</small><b>{{ phone_display|default:"+91 XXXXX XXXXX" }}</b></span>
+      </a>
+
+      <h3 style="margin-top:34px;font-size:1.05rem">Areas I cover</h3>
+      <p class="sub" style="margin-bottom:0">I provide plumbing services across all of Bhubaneswar, Odisha.</p>
+      <p class="sub" style="margin-top:10px;font-size:.92rem">If you are just outside the city limits, ask anyway &mdash; I may still be able to help.</p>
+    </div>
+
+    {% include "partials/lead_form.html" with form_title="Short request" form_title_tag="h3" %}
+  </div>
+</section>
+
+{% comment %} ---------- FULL BOOKING FORM ---------- {% endcomment %}
+<section class="request" id="booking" style="padding-top:0">
+  <div class="wrap request-grid">
+    <div class="rv">
+      <h2>Or book a slot</h2>
+      <p class="sub">Use this one when the work can be planned &mdash; a bathroom job, a tank clean, a
+        set of fittings. It asks for a bit more so I can bring the right parts and hold the right amount
+        of time.</p>
+      <p class="sub">Not urgent, not leaking? This is the form that saves us both a phone call.</p>
+      <ul class="chips" style="margin-top:6px">
+        <li class="plain">Preferred date and time</li>
+        <li class="plain">Urgency</li>
+        <li class="plain">Email, if you want written confirmation</li>
+      </ul>
+    </div>
+
+    {% include "partials/booking_form.html" %}
+  </div>
+</section>
+
+{% comment %} ---------- HOURS + ADDRESS + MAP ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>Hours, and where I am</h2>
+    <div class="cardgrid cardgrid-2" style="align-items:start">
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:4px">General plumbing</h3>
+        <ul class="hours">
+          <li><b>Monday &ndash; Saturday</b><span><time datetime="09:30">9:30 AM</time> &ndash; <time datetime="19:00">7:00 PM</time></span></li>
+          <li><b>Sunday</b><span><time datetime="09:30">9:30 AM</time> &ndash; <time datetime="19:00">7:00 PM</time></span></li>
+        </ul>
+        {% comment %}
+        The "Every day / Round the clock" row was REMOVED, not reworded.
+        It asserted round-the-clock cover, which implementation_plan.md
+        §14.8 lists as UNVERIFIED and §8 "Content rules" forbids
+        publishing ("no false emergency claims"). No substitute hours are
+        stated here because §3 item 2 (emergency-service hours) has not
+        been confirmed - inventing a window would repeat the original
+        mistake. The copy now routes the question to the phone, which is
+        the one channel that can answer it truthfully.
+
+        If and when §3 item 2 is confirmed, add the real window here and
+        keep it in step with the footer and published business hours.
+        {% endcomment %}
+      </div>
+
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:8px">Bajarangi Plumbing Services</h3>
+        <address>
+          <strong>Bajarangi Plumbing Services</strong> &mdash; independent plumber<br>
+          {% comment %}
+          §3 item 1 - street / service address goes on the line below,
+          then mirror it in the JSON-LD "address" in base.html and in
+          partials/footer.html so all three match the Google Business
+          Profile byte-for-byte (implementation_plan.md §8).
+          {% endcomment %}
+          Bhubaneswar, Odisha, India<br><br>
+          <a href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}" style="text-decoration:underline;text-underline-offset:3px">{{ phone_display|default:"+91 XXXXX XXXXX" }}</a><br>
+          <a href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I need a plumber in Bhubaneswar.{% endfilter %}" style="text-decoration:underline;text-underline-offset:3px">WhatsApp</a>
+          {% comment %} §3 item 1 - a mailto: link goes here once an email address is confirmed. {% endcomment %}
+        </address>
+        <p class="sub" style="margin-top:14px;font-size:.92rem">I work out of a van rather than a shop,
+          so there is nothing useful to visit &mdash; but the service area below is real and the phone
+          is answered by me.</p>
+        <div class="mapslot">
+          <span>Coverage map<br>placeholder</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ctaband">
+  <div class="wrap ctaband-inner">
+    <div>
+      <h2>Water running right now?</h2>
+      <p>Close the stop valve, then call. Do not wait for a form to load &mdash; the phone is faster
+        than anything else on this website.</p>
+    </div>
+    <div class="cta">
+      <a class="pill pill-orange" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-ghost" href="#request">Send a general enquiry &rarr;</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE 4 - About / Why Trust Us. §1.2 row 12, /about/.
+implementation_plan.md §5 "About / trust page: experience, team,
+licenses or certifications where applicable, and service process";
+PRD_website_pages.md PAGE 4.
+
+PRD PAGE 4 records this page as "[PARTLY BUILT as the #method
+section]" and lists six original elements as
+"[NOT BUILT - NO HTML COUNTERPART], with their reasons intact". All six
+are built here:
+  1. a page <h1> ("15+ years fixing Bhubaneswar's plumbing") and a
+     portrait slot - the portrait is a labelled placeholder because §3
+     item 11 (genuine photos) is unconfirmed;
+  2. the service-promise tiles - see the note on the warranty tile
+     below, which is the one item deliberately NOT claimed;
+  3. a timeline - see the note below;
+  4. a TEAM section. PRD PAGE 4: "the team section was the visible hook
+     for the plan's scalability goal (adding technicians later); that
+     goal is unchanged". It is written to be true today (one plumber)
+     and to state the growth path, rather than implying a team that
+     does not exist;
+  5. a captioned photo grid of 4-6 genuine job photos - structure
+     built, six labelled placeholder slots;
+  6. a dedicated CTA band.
+The method section, credentials/stats and story are carried over from
+the prototype so this page holds the "15+ years" story that PRD PAGE 4
+assigns to it.
+
+THE WARRANTY TILE IS ABSENT ON PURPOSE. PRD PAGE 4 specifies four
+promise tiles: "upfront pricing / genuine parts / clean-up after work /
+workmanship warranty (only if real)". The first three are already
+stated elsewhere on the site and are safe to promise. The fourth is
+conditional, and PRD PAGES 14-15 confirms "no warranty statement exists
+anywhere in the file", with §3 carrying no warranty terms. So a
+different, genuinely truthful fourth promise is used, and the warranty
+tile slot is marked in the markup below. Add it only once real terms
+exist - they also belong in /terms/.
+
+TIMELINE CONTENT NEEDS OWNER CONFIRMATION. PRD PAGE 4 asks for "a
+timeline of real numbers". §3 item 10 ("a short, accurate professional
+introduction: years of experience, types of work handled, and any
+qualifications or specialties") is unconfirmed, so the timeline below
+carries no invented dates, job counts or certifications - only the
+career shape the site already asserts. Replace with the real detail
+from §3 item 10 before launch.
+
+NO QUALIFICATIONS OR CERTIFICATIONS ARE CLAIMED anywhere on this page,
+because none is confirmed in §3. implementation_plan.md §5 says
+"licenses or certifications where applicable" - add them when they are
+known, do not infer them.
+
+CARRIED-OVER UNVERIFIED CLAIMS: "15+ years", "7+ localities". The
+"24/7" claim is no longer on this page - it was removed site-wide.
+{% endcomment %}
+
+{% block title %}About &mdash; 15+ Years Fixing Bhubaneswar's Plumbing | Bajarangi Plumbing Services{% endblock %}
+{% block description %}Who you are actually calling: one independent plumber, 15+ years in Bhubaneswar, no marketplace and no middleman. How I work, what I promise, and what I will tell you honestly.{% endblock %}
+{% block canonical_path %}/about/{% endblock %}
+{% block og_path %}/about/{% endblock %}
+{% block og_title %}About Bajarangi Plumbing Services &mdash; 15+ Years in Bhubaneswar{% endblock %}
+{% block header %}{% include "partials/header.html" with nav_active="about" %}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="About page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "url": "{{ site_url }}/about/",
+  "name": "About Bajarangi Plumbing Services",
+  "description": "About Bajarangi Plumbing Services: an independent plumber with 15+ years of experience serving Bhubaneswar, Odisha.",
+  "mainEntity": { "@id": "{{ site_url }}/#business" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "About" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">About</span></li>
+  </ol>
+</nav>
+
+{% comment %} ---------- [1] PAGE HEAD + PORTRAIT ---------- {% endcomment %}
+<section class="pagehead">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot" style="width:9px;height:9px;border-radius:50%;background:#2E6B4F"></span>Independent &middot; Bhubaneswar</span>
+    <h1>15+ years fixing Bhubaneswar's plumbing</h1>
+    <p class="promise">One plumber, one phone number, and fifteen years of deciding that it is cheaper
+      to be straight with people than to be clever with them.</p>
+    <div class="hero-cta">
+      <a class="pill pill-orange" href="/contact/#request">Book on WhatsApp</a>
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="cardgrid cardgrid-2 rv" style="align-items:start">
+      <figure style="margin:0">
+        <div class="photoslot" style="aspect-ratio:4/5"><span>Portrait of the plumber<br>at work &mdash; placeholder</span></div>
+        <figcaption style="margin-top:10px;font-size:.87rem;color:var(--grey)">
+          A real photograph goes here. Nothing on this site is a stock photo, and it will not be.
+        </figcaption>
+      </figure>
+      <div class="prose">
+        <p class="lead">I am a plumber in Bhubaneswar and I have been doing this work for more than
+          fifteen years. Bajarangi Plumbing Services is my own business &mdash; my name, my number, my
+          reputation. There is no marketplace between you and me, and no call centre deciding who
+          turns up.</p>
+        <p>That matters more than it sounds. When you book through a platform, the person who arrives
+          has no particular reason to care whether you call again, because you are the platform's
+          customer and not theirs. When you call me, I am the one who has to look at you if the repair
+          fails. It is a simple incentive and it produces better plumbing.</p>
+        <p>It also means I can afford to tell you things that cost me money in the short run: that your
+          drain does not need clearing again, that your pump is fine and the foot valve is not, that the
+          job you are describing is not worth an emergency call-out and should wait until Tuesday. I
+          would rather lose one visit and keep a customer for a decade.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} ---------- [2] SERVICE PROMISE TILES ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>What I promise</h2>
+    <p class="lead">Four things, all of which you can hold me to. Nothing here depends on you taking
+      my word for something you cannot check.</p>
+    <div class="tiles">
+      <div class="tile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <b>Upfront, itemised pricing</b>
+        <p>You get the figure before I start, split into labour and parts. If the job turns out bigger
+          once it is open, I stop and tell you rather than adding it to the bill.</p>
+      </div>
+      <div class="tile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+        <b>Genuine parts, shown to you</b>
+        <p>I show you what came out and what went in. If you would rather buy the fitting yourself,
+          that is fine &mdash; I have no markup to protect.</p>
+      </div>
+      <div class="tile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M7 21V10l5-7 5 7v11"/><path d="M10 21v-5h4v5"/></svg>
+        <b>I clean up before I leave</b>
+        <p>Old parts, packaging and debris go with me. You should not be able to tell where I worked
+          except that the thing that was broken is not any more.</p>
+      </div>
+      <div class="tile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16v-4"/><path d="M12 8h.01"/><circle cx="12" cy="12" r="9"/></svg>
+        <b>A straight answer, including "don't"</b>
+        <p>If a repair is not worth doing, if the problem is not plumbing, or if you need a trade that
+          is not mine, I will say so. That answer is free.</p>
+      </div>
+      {% comment %}
+      WARRANTY TILE SLOT - PRD PAGE 4's fourth specified tile is
+      "workmanship warranty (only if real)". Add a fifth tile here once
+      §3 confirms the terms, and mirror them in /terms/. Do not add it
+      before that: "no warranty statement exists anywhere in the file"
+      (PRD PAGES 14-15) and an unbacked warranty is exactly the kind of
+      claim implementation_plan.md §8 forbids.
+      {% endcomment %}
+    </div>
+  </div>
+</section>
+
+{% comment %} ---------- [3] METHOD (dark, carried over) ---------- {% endcomment %}
+<section class="method" id="method">
+  <div class="method-pipes" aria-hidden="true">
+    <span class="m-dot" style="width:74px;height:74px;background:#F5A733;top:6%;left:62%"></span>
+    <span class="m-dot" style="width:56px;height:56px;background:#1E7FA0;top:64%;left:20%"></span>
+    <span class="m-dot" style="width:64px;height:64px;background:#F5A733;bottom:8%;left:78%"></span>
+    <span class="m-dot" style="width:44px;height:44px;background:#2358A8;top:30%;left:8%"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="method-head rv">
+      <h2><span class="w1">Listen</span>, <span class="w2">Locate</span>, <span class="w3">Repair</span>:<br>the method of my trade.</h2>
+      <p>Fifteen years teaches you that most jobs go wrong at the first step. So I start by
+        understanding the problem before touching a spanner.</p>
+    </div>
+    <div class="method-steps">
+      <div class="mstep rv"><b>01 &mdash; Listen</b><p>You tell me what's happening on WhatsApp. I ask the right questions before quoting anything.</p></div>
+      <div class="mstep rv"><b>02 &mdash; Locate</b><p>I trace the fault to its actual source, not just the symptom, so it's fixed once rather than patched twice.</p></div>
+      <div class="mstep rv"><b>03 &mdash; Repair</b><p>Clean, durable repair with quality parts. I test it, show you it works, and tidy up before leaving.</p></div>
+    </div>
+  </div>
+
+  <div class="method-photos">
+    <div class="m-photo" style="top:14%;left:6%;transform:rotate(-5deg)"><span>Work photo<br>placeholder</span></div>
+    <div class="m-photo" style="top:22%;right:8%;transform:rotate(4deg)"><span>Work photo<br>placeholder</span></div>
+    <div class="m-photo" style="bottom:6%;left:24%;transform:rotate(3deg)"><span>Work photo<br>placeholder</span></div>
+  </div>
+</section>
+
+{% comment %} ---------- STORY + TIMELINE ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap">
+    <div class="prose rv">
+      <h2>How I got here</h2>
+      <p>Every leak tells a story. Across Bhubaneswar, I have spent fifteen years tracing problems back
+        to their root &mdash; and fixing them there.</p>
+      <p>The shape of it is ordinary enough: years on other people's sites learning the trade properly,
+        years doing the work for other people's businesses, and then the decision to do it under my own
+        name so that the quality of the job and the reputation of the business belong to the same
+        person.</p>
+    </div>
+    <ul class="timeline rv">
+      <li>
+        <b>Learning the trade on site</b>
+        <span>Copper, galvanised and PVC, before concealed plumbing became the default. Knowing how the
+          older buildings in this city are piped is the reason I can find leaks in them now.</span>
+      </li>
+      <li>
+        <b>Working across Bhubaneswar's building boom</b>
+        <span>New apartment blocks, planned colonies and refits, which is where the pattern-recognition
+          comes from &mdash; why upper floors lose pressure, why concealed leaks surface two rooms
+          away.</span>
+      </li>
+      <li>
+        <b>Fifteen-plus years in, going independent</b>
+        <span>Bajarangi Plumbing Services: my own name, my own number, and customers who call me rather than a
+          platform.</span>
+      </li>
+      <li>
+        <b>What is next</b>
+        <span>Taking on and training a second pair of hands, carefully, so that the standard of the work
+          does not drop the day the business stops being one person.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{% comment %} ---------- [4] CREDENTIALS ---------- {% endcomment %}
+<section class="stats">
+  <div class="wrap stats-row">
+    <div class="stat rv"><b>15+</b><span>Years of hands-on plumbing experience</span></div>
+    {% comment %} "7+" became "7" - exactly seven localities are listed
+    across the site, so "7+" claimed more than it could show. {% endcomment %}
+    <div class="stat rv"><b>7</b><span>Bhubaneswar localities served directly</span></div>
+    {% comment %} The "24/7 / Emergency call-outs" stat was removed rather than
+    reworded: it was an UNVERIFIED availability claim (implementation_plan.md
+    §14.8) and §8 "Content rules" forbids publishing false emergency claims.
+    Nothing replaces it, because inventing a substitute figure would repeat the
+    original mistake. .stats-row is auto-fit, so two tiles stay balanced. {% endcomment %}
+  </div>
+</section>
+
+{% comment %} ---------- TEAM ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>Who actually turns up</h2>
+    <p class="lead">Worth being plain about this, because it is the question behind most of the others.</p>
+    <div class="cardgrid cardgrid-2">
+      <div class="lcard">
+        <b>Today: me</b>
+        <p>Bajarangi Plumbing Services is one plumber. The person who answers your message, quotes the job, does the
+          work and comes back if something is wrong is the same person. Nobody is subcontracted and
+          nobody is dispatched.</p>
+        <p style="margin-top:10px">The trade-off is honest: I cannot be in two places at once, so on a
+          busy day I will tell you when I can genuinely get to you rather than promising a slot I will
+          then miss.</p>
+      </div>
+      <div class="lcard">
+        <b>As this grows: trained help, named</b>
+        <p>When I take on a second pair of hands, this page will say so &mdash; who they are and what
+          they are qualified to do. You will know before they knock whether you are getting me or a
+          colleague.</p>
+        <p style="margin-top:10px">What will not change is who is accountable for the work. If a
+          colleague does the job and it fails, it is still my name on the business.</p>
+      </div>
+    </div>
+    {% comment %}
+    §3 item 7 (team size, technician assignment process, who confirms
+    bookings) is unconfirmed, and §3 item 10's qualifications are too.
+    When technicians are added, the first-person copy across this site
+    needs rewriting from "I" to "we" - PRD PAGE 4 flags exactly this,
+    and it is the visible hook for the scalability goal in
+    implementation_plan.md §1.
+    {% endcomment %}
+  </div>
+</section>
+
+{% comment %} ---------- [5] CAPTIONED PHOTO GRID ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>Work I have done</h2>
+    <p class="lead">Six slots, six placeholders. Real photographs of real jobs go here once I have the
+      customer's permission to publish them &mdash; and not before. There are no stock photos on this
+      site and there will not be any.</p>
+    <div class="photogrid">
+      <figure>
+        <div class="photoslot"><span>Job photo 1<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo 2<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo 3<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo 4<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo 5<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo 6<br>placeholder</span></div>
+        <figcaption>Caption describing the job, the locality and what the fix was.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+{% comment %} ---------- [6] DEDICATED CTA BAND ---------- {% endcomment %}
+<section class="ctaband">
+  <div class="wrap ctaband-inner">
+    <div>
+      <h2>Decided I sound like the right person?</h2>
+      <p>Send me the problem. If it is not my kind of job I will tell you that too, before either of
+        us wastes a visit on it.</p>
+    </div>
+    <div class="cta">
+      <a class="pill pill-orange" href="/contact/#request">Book on WhatsApp</a>
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call now</a>
+      <a class="pill pill-ghost" href="/contact/">All contact options &rarr;</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE TYPE 2 - reusable service-page layout.
+implementation_plan.md §5 "Service pages: one indexable page per
+important service"; PRD_website_pages.md PAGE TYPE 2.
+
+The section order below is the PRD's template, item for item:
+  [1] breadcrumb            [6] local proof
+  [2] compact hero + CTAs   [7] related services + areas served
+  [3] problems we fix       [8] mini booking form, service pre-filled
+  [4] what we do            [9] service-specific FAQ
+  [5] pricing note          [10] footer (from base.html)
+
+PRD §1.2 note: "the templates below are reusable", which is why this
+exists as a layout the six concrete pages extend rather than six
+copies. Sections [7] areas-served and the CTA band are identical on
+every service page, so they live here; everything page-specific is a
+block.
+
+Each concrete page must supply: title, description, canonical_path,
+og_path, crumb_label, svc_h1, svc_promise, svc_intro, svc_problems,
+svc_process, svc_pricing, svc_faq, svc_related, svc_form, ld_extra
+and actionbar.
+{% endcomment %}
+
+{% block header %}{% include "partials/header.html" with nav_active="services" %}{% endblock %}
+
+{% block content %}
+
+{% comment %} ---------- [1] BREADCRUMB ---------- {% endcomment %}
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#services">Services</a></li>
+    <li><span aria-current="page">{% block crumb_label %}Service{% endblock %}</span></li>
+  </ol>
+</nav>
+
+{% comment %} ---------- [2] COMPACT HERO ---------- {% endcomment %}
+<section class="pagehead">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot" style="width:9px;height:9px;border-radius:50%;background:#2E6B4F"></span>15+ years &middot; Bhubaneswar</span>
+    <h1>{% block svc_h1 %}Plumbing in Bhubaneswar{% endblock %}</h1>
+    <p class="promise">{% block svc_promise %}{% endblock %}</p>
+    <div class="hero-cta">
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-orange" href="#book">Book on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="prose rv">{% block svc_intro %}{% endblock %}</div>
+  </div>
+</section>
+
+{% comment %} ---------- [3] PROBLEMS WE FIX ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>{% block svc_problems_heading %}Problems I fix{% endblock %}</h2>
+    <p class="lead">{% block svc_problems_lead %}If yours is on this list, it is routine work for me.{% endblock %}</p>
+    <ul class="checklist">{% block svc_problems %}{% endblock %}</ul>
+  </div>
+</section>
+
+{% comment %} ---------- [4] WHAT WE DO ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>{% block svc_process_heading %}How I do the job{% endblock %}</h2>
+    <p class="lead">{% block svc_process_lead %}Honest about the method, the tools and the limits.{% endblock %}</p>
+    <ol class="process">{% block svc_process %}{% endblock %}</ol>
+  </div>
+</section>
+
+{% comment %} ---------- [5] PRICING NOTE ---------- {% endcomment %}
+<section class="section-tight">
+  <div class="wrap rv">
+    <h2>What it costs</h2>
+    <div class="note">{% block svc_pricing %}
+      <p>The ₹150 visit charge applies ONLY if the customer declines the repair after inspection &mdash; there is no charge if the customer proceeds with the repair.</p>
+      <p style="margin-top:10px">GST is not currently applicable, because turnover is below the ₹20 lakh per year threshold requiring registration under Indian GST law.</p>
+    {% endblock %}</div>
+  </div>
+</section>
+
+{% comment %} ---------- [6] LOCAL PROOF ---------- {% endcomment %}
+{% comment %}
+FABRICATED REVIEWS REMOVED - compliance review, September 2026.
+
+Each of the six service pages used to override a `svc_proof` block here
+with two <blockquote class="proofquote"> testimonials: five gold stars, a
+quote, and an attribution reading "Placeholder name · <locality>". Twelve
+in total, plus three more on the home page. Every one was invented.
+
+Why a "Sample" tag was not a sufficient defence:
+
+  - Consumer Protection Act 2019 s.2(28) defines a misleading
+    advertisement to include one that gives a false description or a false
+    guarantee. A fabricated endorsement is exactly that, and the CCPA can
+    penalise it up to Rs 10 lakh, rising to Rs 50 lakh for a repeat. The
+    tag was rendered at .6rem in #9AA5B4 on a pale yellow card - roughly
+    2:1 contrast, the least legible text on the page - so the disclosure
+    was materially harder to read than the claim it was qualifying.
+  - IS 19000:2022, the BIS standard on online consumer reviews, requires a
+    published review to be traceable to a real, verifiable author.
+  - The markup was semantic <blockquote> and <q> with a locality
+    attribution, so a search engine, an AI summariser or a screen reader
+    encountered a genuine-looking review. The stars were aria-hidden, so a
+    screen-reader user got the testimonial without even the visual cue
+    that it was a sample.
+
+The bar before anything goes back here: a real, named customer who has
+given written permission for their words to be published. When that
+exists, add Review / AggregateRating JSON-LD in base.html at the same
+time - it is deliberately absent today, and it must stay absent while
+there is nothing true to put in it.
+
+The photograph placeholders below stay. They promise nothing and claim
+nothing; they are visibly empty slots, not invented content.
+{% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>Photographs of this work</h2>
+    <p class="lead">These slots are empty on purpose. Genuine photographs of my own jobs go here once
+      I have the customer's permission to publish them &mdash; I would rather show you nothing than
+      show you someone else's stock photograph.</p>
+    <div class="photogrid">
+      <figure>
+        <div class="photoslot"><span>Job photo<br>placeholder</span></div>
+        <figcaption>Awaiting a genuine, permissioned photograph of this work.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo<br>placeholder</span></div>
+        <figcaption>Awaiting a genuine, permissioned photograph of this work.</figcaption>
+      </figure>
+      <figure>
+        <div class="photoslot"><span>Job photo<br>placeholder</span></div>
+        <figcaption>Awaiting a genuine, permissioned photograph of this work.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+{% comment %} ---------- [7] RELATED SERVICES + AREAS SERVED ---------- {% endcomment %}
+<section class="section">
+  <div class="wrap rv">
+    <h2>Related work</h2>
+    <div class="cardgrid">{% block svc_related %}{% endblock %}</div>
+
+    <h2 style="margin-top:52px">Where I do this work</h2>
+    <p class="lead">I provide this service across all of Bhubaneswar, Odisha. If you are just outside the city limits, ask anyway &mdash; I may still be able to help.</p>
+  </div>
+</section>
+
+{% comment %} ---------- [8] MINI BOOKING FORM, SERVICE PRE-FILLED ---------- {% endcomment %}
+<section class="request" id="book">
+  <div class="wrap request-grid">
+    <div class="rv">
+      <h2>Send me the details</h2>
+      <p class="sub">The service is already selected. Add your name, number, locality and what's
+        happening, and WhatsApp opens with the lot written out.</p>
+      <a class="emg" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>
+        <span><small>Need plumbing help?</small><b>{{ phone_display|default:"+91 XXXXX XXXXX" }}</b></span>
+      </a>
+      <p class="sub" style="margin-top:26px">Want to pick a date instead?
+        <a href="/contact/#booking" style="text-decoration:underline;text-underline-offset:3px;font-weight:700;color:var(--focus)">Use the booking form</a>.</p>
+    </div>
+    {% block svc_form %}{% include "partials/lead_form.html" %}{% endblock %}
+  </div>
+</section>
+
+{% comment %} ---------- [9] FAQ ---------- {% endcomment %}
+<section class="section" id="faq">
+  <div class="wrap rv">
+    <h2>{% block svc_faq_heading %}Questions about this job{% endblock %}</h2>
+    <div class="faq">{% block svc_faq %}{% endblock %}</div>
+  </div>
+</section>
+
+<section class="ctaband">
+  <div class="wrap ctaband-inner">
+    <div>
+      <h2>Still not sure it's the right fix?</h2>
+      <p>Describe it to me on WhatsApp. If it isn't my kind of job, I'll say so rather than
+        turn up and charge you for the visit.</p>
+    </div>
+    <div class="cta">
+      <a class="pill pill-orange" href="#book">Ask on WhatsApp</a>
+      <a class="pill pill-ghost" href="/contact/">All contact options &rarr;</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

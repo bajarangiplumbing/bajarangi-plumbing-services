@@ -1,0 +1,137 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+================================================================
+Site shell - implementation_plan.md §6 "the page's markup and inline
+CSS/JS should be split into base.html, page templates, partials and
+static assets following the structure below".
+
+The <head> here closes most of the local-SEO layer that
+PRD_website_pages.md §6 counted as missing from the prototype
+(zero canonical, zero JSON-LD, zero og:, zero robots meta, zero
+favicon, zero theme-color) and that implementation_plan.md §8
+requires. Per-page title, description, canonical path and extra
+structured data are supplied by the page templates through blocks.
+
+CONTEXT VARIABLES THIS TEMPLATE EXPECTS (all optional today; every
+one has a working default so the templates render standalone). When
+the Django project exists, supply them from a single context
+processor so there is one source of truth per implementation_plan.md
+§8 NAP-consistency rule:
+    site_url       absolute origin, no trailing slash, e.g.
+                   "https://example.com". Without it the canonical
+                   and og:url render document-relative, which is
+                   valid but weaker - set it before launch.
+    phone_display  "+91 XXXXX XXXXX"   <- real number, §3 item 1 closed
+    phone_tel      "+91XXXXXXXXXX"     <- real number, §3 item 1 closed
+    wa_number      "91XXXXXXXXXX"      <- real number, §3 item 1 closed
+
+STILL OUTSTANDING IN THE HEAD, and not faked here:
+  - og:image / twitter:image: needs one real photograph, which is
+    §3 item 11 (genuine work photos) and does not exist yet. An SVG
+    will not do; most platforms reject it.
+  - JSON-LD streetAddress: §3 item 1, see partials/footer.html.
+  - sitemap.xml / robots.txt / Search Console / analytics: server and
+    deployment concerns, implementation_plan.md §11 Phase 3.
+================================================================
+{% endcomment %}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Bajarangi Plumbing Services &mdash; Independent Plumber in Bhubaneswar{% endblock %}</title>
+<meta name="description" content="{% block description %}Independent plumber in Bhubaneswar with 15+ years of experience. Message directly on WhatsApp.{% endblock %}">
+<link rel="canonical" href="{{ site_url }}{% block canonical_path %}/{% endblock %}">
+<meta name="robots" content="{% block robots %}index,follow{% endblock %}">
+<meta name="theme-color" content="#14306E">
+<link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{% static 'images/favicon.svg' %}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bajarangi Plumbing Services">
+<meta property="og:locale" content="en_IN">
+<meta property="og:title" content="{% block og_title %}Bajarangi Plumbing Services &mdash; Independent Plumber in Bhubaneswar{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Independent plumber in Bhubaneswar with 15+ years of experience. Message directly on WhatsApp.{% endblock %}">
+<meta property="og:url" content="{{ site_url }}{% block og_path %}/{% endblock %}">
+<meta name="twitter:card" content="summary">
+
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Plumber",
+  "@id": "{{ site_url }}/#business",
+  "name": "Bajarangi Plumbing Services",
+  "description": "Independent plumber serving Bhubaneswar, Odisha, with 15+ years of hands-on experience in leak detection and repair, water tank and motor work, WC and toilet fittings, washbasin and bathroom accessory fittings, bathroom tile regrouting, and bathroom plumbing installation and renovation.",
+  "url": "{{ site_url }}/",
+  "telephone": "{{ phone_tel|default:'+91XXXXXXXXXX' }}",
+  "priceRange": "₹₹",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Nimapara",
+    "addressRegion": "Odisha",
+    "postalCode": "",
+    "addressCountry": "IN"
+  },
+  "areaServed": [
+    { "@type": "Place", "name": "Bhubaneswar" }
+  ],
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+      "opens": "09:30",
+      "closes": "19:00"
+    }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Plumbing services in Bhubaneswar",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Leak Detection & Repair", "url": "{{ site_url }}/services/leak-repair/" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Water Tank & Motor Work", "url": "{{ site_url }}/services/water-tank/" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "WC / Toilet Fittings", "url": "{{ site_url }}/services/wc-toilet-fittings/" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Washbasin & Bath Accessories Fittings", "url": "{{ site_url }}/services/washbasin-bath-accessories/" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Bathroom Tile Grouting", "url": "{{ site_url }}/services/bathroom-tile-grouting/" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "New Bathroom Installation & Full Renovation", "url": "{{ site_url }}/services/bathroom-installation-renovation/" } }
+    ]
+  }
+}
+</script>
+{% comment %}
+No "aggregateRating" and no "review" property is emitted anywhere,
+deliberately: implementation_plan.md §8 forbids publishing reviews
+that are not genuine, and the only review cards on the site are
+labelled placeholders. Add Review / AggregateRating markup only when
+real permissioned reviews exist (PRD PAGE 1 reviews bullet).
+{% endcomment %}
+{% block ld_extra %}{% endblock %}
+{% block head_extra %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}"
+      data-wa="{{ wa_number|default:'91XXXXXXXXXX' }}"
+      data-biz="Bajarangi Plumbing Services">
+
+<a class="skip" href="#main">Skip to content</a>
+
+{% include "partials/page_background.html" %}
+
+{% block header %}{% include "partials/header.html" %}{% endblock %}
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+{% include "partials/footer.html" %}
+
+{% comment %}
+The action bar is rendered from base.html so it is genuinely on every
+page, which is what PRD §2.2 asks for. Pages override this block only
+to name themselves in the prefilled WhatsApp message.
+{% endcomment %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" %}{% endblock %}
+
+<script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>

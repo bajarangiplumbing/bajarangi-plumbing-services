@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE 15 - Terms of Service. §1.2 row 15, /terms/.
+implementation_plan.md §5 "Privacy policy and terms";
+PRD_website_pages.md PAGES 14-15.
+
+PRD PAGES 14-15: "Terms: estimates are indicative, inspection charge,
+warranty terms, service-area limits." Its required-content table lists
+those four for this page, each previously with "None" as its
+counterpart. All four are covered below.
+
+TWO OF THE FOUR ARE WRITTEN AS PROCESS, NOT AS FIGURES, and that is
+deliberate:
+  - "Inspection charge": §3 item 6 (pricing approach: inspection
+    charge, starting prices, whether GST applies) is unconfirmed, and
+    PRD PAGE 1 records that no price of any kind appears anywhere on
+    the site. So this page states how and when a charge is told to you,
+    not an amount. Insert the amounts and the GST position at the
+    marked place once §3 item 6 is settled.
+  - "Warranty terms": PRD PAGES 14-15 states plainly that "no warranty
+    statement exists anywhere in the file", and PRD PAGE 4 makes the
+    warranty promise tile conditional on it being real. So this page
+    describes the position that is actually true today - any guarantee
+    is agreed per job, in writing on WhatsApp - and neither invents a
+    warranty nor denies one that may be given informally. Replace with
+    the real terms once they exist, and add the matching tile on
+    /about/ at the same time.
+
+SERVICE-AREA LIMITS: the seven localities are listed, which
+implementation_plan.md §14.8 records as an UNVERIFIED coverage claim.
+§3 item 4 must confirm them; if it does not, this list, the home-page
+"7+" stat and the area pages must be corrected together.
+
+RESPONSE TIMES: no arrival time or response window is stated, per §3
+item 5.
+{% endcomment %}
+
+{% block title %}Terms of Service | Bajarangi Plumbing Services{% endblock %}
+{% block description %}How Bajarangi Plumbing Services quotes work, what an estimate does and does not commit to, how any inspection charge is handled, guarantees on workmanship, and the areas covered.{% endblock %}
+{% block canonical_path %}/terms/{% endblock %}
+{% block og_path %}/terms/{% endblock %}
+{% block og_title %}Terms of Service | Bajarangi Plumbing Services{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Terms of service page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Terms of service" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Terms of service</span></li>
+  </ol>
+</nav>
+
+<section class="pagehead">
+  <div class="wrap">
+    <h1>Terms of service</h1>
+    <p class="promise">The rules I work to, written so you can hold me to them. Short, and in plain
+      language, because terms nobody reads protect nobody.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="prose">
+      <p class="lead">These terms apply to plumbing work carried out by {{ business_name }}, an
+        independent plumbing business operating in Bhubaneswar, Odisha. Last updated
+        {{ policy_updated }}.</p>
+
+      {% comment %}
+      Trader identity. Added by the September 2026 compliance review: the
+      page previously bound a customer to terms without naming anyone they
+      could enforce them against. Guarded so an unset value is absent
+      rather than rendered as a placeholder; core/checks.py blocks a
+      production start while the proprietor or address is missing.
+      {% endcomment %}
+      <h2>Who you are dealing with</h2>
+      <ul>
+        <li><strong>{{ business_name }}</strong>{% if business_entity_type %} &mdash; {{ business_entity_type|lower }}{% endif %}</li>
+        {% if business_proprietor %}<li>Proprietor: {{ business_proprietor }}</li>{% endif %}
+        {% if business_address_is_complete %}<li>{{ business_address_inline }}</li>{% endif %}
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+        {% if business_email %}<li>Email: <a href="mailto:{{ business_email }}">{{ business_email }}</a></li>{% endif %}
+        {% if business_gstin %}<li>GSTIN: {{ business_gstin }}</li>{% endif %}
+      </ul>
+      <p>I hold no trade licence or certification, and this website does not claim any. What I offer is
+        experience and a straight answer, which is a different thing and is described honestly on the
+        <a href="/about/">about page</a>.</p>
+
+      <h2>Booking is a request, not a confirmed appointment</h2>
+      <p>Submitting either form on this website sends me a message. It does not book a slot on its own.
+        A visit is confirmed when I reply and we agree a time between us.</p>
+      <p>Both forms work by opening WhatsApp with your details written out, which you then send. If you
+        do not tap Send in WhatsApp, I do not receive the request at all. If you have not heard back and
+        you are not sure the message went, please call.</p>
+
+      <h2>Arrival times</h2>
+      <p>I do not promise an arrival time on this website, and I will not give you one before we have
+        spoken. Once we have, the time I give you is my genuine intention, and if something overruns I
+        will tell you rather than leave you waiting.</p>
+      <p>For anything actively leaking, close your stop valve and call. That protects your home far
+        better than any promised arrival window.</p>
+
+      <h2>Estimates are indicative until I have seen the job</h2>
+      <p>Anything I tell you before seeing the work &mdash; over the phone, on WhatsApp, or in a message
+        &mdash; is an indication based on your description. It is not a fixed quote and it can change
+        once I can see what is actually there.</p>
+      <p>The figure I give you after inspecting the job is the one that counts. You get it before I
+        start, itemised into labour and parts, and you decide whether to go ahead.</p>
+      <p>If, having opened something up, I find the job is materially bigger than it appeared, I stop
+        and tell you, with a revised figure, before continuing. I will not carry on and add it to the
+        bill at the end.</p>
+
+      <h2>Inspection and call-out charges</h2>
+      <p>Where a visit is needed to diagnose a problem, the ₹150 visit charge applies ONLY if the customer declines the repair after inspection &mdash; there is no charge if the customer proceeds with the repair. This charge is told to you
+        before I set off &mdash; not on arrival and not afterwards. If you decide not to proceed with the
+        repair, that charge still covers the visit and the diagnosis.</p>
+
+      <h2>Taxes</h2>
+      <p>GST is not currently applicable, because turnover is below the ₹20 lakh per year threshold requiring registration under Indian GST law.</p>
+
+      <h2>Parts</h2>
+      <p>I use parts that are appropriate for the job and I show you what has been fitted. You are
+        welcome to supply your own fittings; if you do, my work is guaranteed but the part itself is
+        covered by whatever guarantee came with it and not by me.</p>
+      <p>Where a part is unavailable and a sound temporary repair is possible, I will do that, tell you
+        clearly that it is temporary, and agree when I am returning to complete it. A temporary repair
+        will never be described to you as a permanent one.</p>
+
+      <h2>Guarantees on workmanship</h2>
+      <p>Bajarangi Plumbing Services does not currently publish a standard written workmanship warranty. What applies
+        instead is specific and checkable: any guarantee on your job is stated in the quote I send you
+        on WhatsApp before the work starts, and that written agreement is what governs it.</p>
+      <p>If a repair I have carried out fails in a way that is down to my work, tell me and I will put it
+        right. What I cannot take responsibility for is a different fault in the same system, wear on
+        parts you supplied, or work altered by someone else afterwards.</p>
+      {% comment %}
+      WARRANTY TERMS SLOT. PRD PAGES 14-15 lists "Warranty terms" as
+      required content for this page and records that no warranty
+      statement exists anywhere in the build; PRD PAGE 4 makes the
+      About-page warranty tile conditional on it being real. Replace the
+      two paragraphs above with the actual terms once decided (period,
+      what is covered, what voids it), and add the fourth promise tile
+      on /about/ in the same change.
+      {% endcomment %}
+
+      <h2>Where I work</h2>
+      <p>I provide plumbing services across all of Bhubaneswar, Odisha.</p>
+      <p>If you are just outside the city limits, ask anyway &mdash; it depends on the day and the job, and travel may be charged. Being outside the city limits is not a refusal, it just means it has to be agreed rather than assumed.</p>
+
+      <h2>What is not my trade</h2>
+      <p>I do plumbing. I do not do tiling, waterproofing, structural work, or electrical work beyond the
+        switch and starter connections that go with a domestic pump. If your job needs one of those, I
+        will tell you rather than attempt it.</p>
+      <p>I will also tell you when a repair is not worth doing, or when the problem is not plumbing at
+        all. That advice is free and it is meant seriously.</p>
+
+      <h2>Access and safety</h2>
+      <p>I need reasonable access to the work, and to your stop valve, tank or pump where the job
+        involves them. Where water has reached sockets, a distribution board or a heater, the power must
+        be off before I can work safely, and I may decline to proceed until it is.</p>
+
+      <h2>Payment</h2>
+      <p>Payment is due on completion of the agreed work, by the method we agree at the time. There is no
+        online payment on this website, and I will never ask you for card or bank details through this
+        site or over WhatsApp.</p>
+
+      <h2>Independence</h2>
+      <p>Bajarangi Plumbing Services is an independent business. It is not owned by, endorsed by or partnered with any
+        marketplace or platform, and no marketplace branding, customer data or reviews appear on this
+        website.</p>
+
+      <h2>Cancelling, and what happens if work is defective</h2>
+      <p>Cancellation before I set off is free and always will be. If a repair I carried out fails
+        because of my work, I come back and put it right at no charge. The full position &mdash;
+        no-shows, specially ordered parts, and how to raise a problem &mdash; is set out on the
+        <a href="/refunds/">cancellations and refunds page</a>.</p>
+
+      <h2>What I am responsible for, and what I am not</h2>
+      <p>I am responsible for my own work, and for damage I actually cause. If I break something while
+        working in your home, that is mine to put right and I will not argue about it.</p>
+      <p>What I do not accept responsibility for:</p>
+      <ul>
+        <li>Pre-existing faults and wear I did not cause, including pipework that fails elsewhere while
+          I am working on a different part of the system. Old plumbing sometimes fails when it is
+          disturbed, and I will tell you when I think that is a genuine risk before I start.</li>
+        <li>Loss that follows on from a fault rather than being the fault itself &mdash; loss of income,
+          time off work, or a missed appointment.</li>
+        <li>Work altered by someone else after I left, or parts you supplied.</li>
+        <li>Delay caused by something outside my control, such as a part being unavailable, a water
+          supply being shut off by the authority, or weather that makes the work unsafe.</li>
+      </ul>
+      <p>Where I am liable for a job, my liability is limited to putting the work right or refunding what
+        you paid for it, whichever you would prefer. <strong>None of this limits your rights under the
+        Consumer Protection Act 2019, and nothing here excludes liability for death or personal injury
+        caused by negligence, or for anything else that cannot lawfully be excluded.</strong> If any
+        part of this section is unenforceable, the rest still applies.</p>
+
+      <h2>Your details</h2>
+      <p>What is collected, exactly where it goes, how long it is kept and how to have it deleted is set
+        out in the <a href="/privacy/">privacy notice</a>. Cookies are covered
+        <a href="/cookies/">separately</a>.</p>
+      <p>Worth knowing before you use either form: pressing send saves your details on my server as well
+        as opening WhatsApp, so I receive them even if you then close WhatsApp without sending the
+        message. If you would rather that did not happen, call instead.</p>
+
+      <h2>If we disagree</h2>
+      <p>Tell me first. Most disputes are a misunderstanding about what was agreed, and I would rather
+        spend an hour fixing something than a day arguing about it. I aim to reply within two working
+        days and to agree a way forward within seven.</p>
+      <p>If that does not resolve it, you can take the matter to the District Consumer Disputes Redressal
+        Commission for Khordha district, or contact the National Consumer Helpline. Going to me first is
+        not a precondition &mdash; it is just usually faster.</p>
+
+      <h2>Governing law</h2>
+      <p>These terms, and any work carried out under them, are governed by the laws of India. The courts
+        and consumer forums at Bhubaneswar, in the district of Khordha, Odisha, have jurisdiction.
+        Because you are a consumer, you keep any right you have to bring a complaint where you live,
+        and this clause does not take that away.</p>
+
+      <h2>Changes to these terms</h2>
+      <p>The terms that apply to your job are the ones published when you booked it. If I change this
+        page, the date at the top changes with it, and a change never applies retrospectively to work
+        already agreed.</p>
+
+      <h2>Questions about these terms</h2>
+      <p>Ask me before the work starts rather than afterwards &mdash; that is much easier for both of
+        us.</p>
+      <ul>
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+        {% if business_email %}<li>Email: <a href="mailto:{{ business_email }}">{{ business_email }}</a></li>{% endif %}
+        <li>WhatsApp: <a href="https://wa.me/{{ wa_number }}?text={% filter urlencode %}Hi {{ business_name }}, I have a question about your terms of service.{% endfilter %}">message me</a></li>
+      </ul>
+
+      <p><a href="/privacy/">Privacy notice</a> &middot; <a href="/cookies/">Cookie policy</a> &middot;
+        <a href="/refunds/">Cancellations &amp; refunds</a> &middot; <a href="/contact/">Contact</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

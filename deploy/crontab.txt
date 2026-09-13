@@ -1,0 +1,14 @@
+# Crontab entries for Bajarangi Plumbing Services
+# 
+# Timezone Assumption: UTC
+# The schedule below is set to 20:30 UTC, which corresponds to 02:00 AM IST (UTC+05:30) 
+# the following calendar day.
+#
+# If your EC2 instance is configured with the Asia/Kolkata timezone locally, 
+# you should change "30 20" to "0 2".
+
+# Purge expired leads, bookings, and submission IPs
+30 20 * * * cd /home/ubuntu/project-plumb && /home/ubuntu/project-plumb/.venv/bin/python manage.py purge_expired_leads --include-throttle >> /home/ubuntu/project-plumb/cron_purge.log 2>&1
+
+# Clear expired sessions
+30 20 * * * cd /home/ubuntu/project-plumb && /home/ubuntu/project-plumb/.venv/bin/python manage.py clearsessions >> /home/ubuntu/project-plumb/cron_sessions.log 2>&1

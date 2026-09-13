@@ -1,0 +1,30 @@
+{% comment %}
+Sticky bottom action bar - PRD_website_pages.md §2.2.
+
+This was "[NOT BUILT - NO HTML COUNTERPART]" in the prototype and is
+described there as "the site's signature element" and "the single most
+important conversion element on the site", and in
+implementation_plan.md §9 / §12 acceptance row 1 as the highest
+priority gap. Built here to that spec:
+  - fixed to the bottom of the viewport
+  - shown below 768px (core/static/css/main.css @media max-width:767px)
+  - present on every page, because base.html renders it
+  - left half tel:, right half wa.me with a prefilled message that
+    names the page the visitor came from
+  - 60px rows, above the 48px minimum touch target
+
+`wa_context` is set per page through the `actionbar` block in
+base.html so the prefilled message identifies the page.
+{% endcomment %}
+{% with ctx=wa_context|default:"Website" %}
+<div class="actionbar" role="group" aria-label="Contact Bajarangi Plumbing Services">
+  <a class="ab-call" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>
+    Call now
+  </a>
+  <a class="ab-wa" href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I need a plumber in Bhubaneswar. (Sent from: {{ ctx }}){% endfilter %}">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.7 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a12 12 0 0 1-5.6-4.9c-.4-.6-.7-1.4-.7-2 0-.6.3-1 .6-1.3.2-.2.4-.2.6-.2h.4c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.5l-.4.5c-.1.1-.2.3-.1.5.3.6.8 1.2 1.3 1.6.5.4 1 .6 1.3.8.2.1.4 0 .5-.1l.5-.6c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.4.3.1.2.1.5 0 .7Z"/></svg>
+    WhatsApp us
+  </a>
+</div>
+{% endwith %}

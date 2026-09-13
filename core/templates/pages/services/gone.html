@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Service Page Retired | Bajarangi Plumbing Services{% endblock %}
+{% block description %}This service page is no longer part of the public catalog. Contact Bajarangi Plumbing Services to describe the plumbing work you need.{% endblock %}
+{% block robots %}noindex,follow{% endblock %}
+{% block header %}{% include "partials/header.html" with nav_active="services" %}{% endblock %}
+
+{% block content %}
+<section class="pagehead">
+  <div class="wrap prose">
+    <span class="eyebrow">Service page retired</span>
+    <h1>This service page is no longer listed</h1>
+    <p class="promise">The public service catalog has changed. If you still need help with a plumbing problem, describe it through the general enquiry form and I will tell you honestly whether I can take it on.</p>
+    <div class="hero-cta">
+      <a class="pill pill-orange" href="/contact/#request">Send a general enquiry</a>
+      <a class="pill pill-light" href="/#services">View current services</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

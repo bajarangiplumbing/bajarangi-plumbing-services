@@ -1,0 +1,23 @@
+[Unit]
+Description=gunicorn daemon for plumber_site
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/project-plumb
+
+# Systemd will load the .env file from this secure location.
+# IMPORTANT: Place your configured .env here and ensure it is readable by the ubuntu user.
+EnvironmentFile=/etc/plumb/.env
+
+# Assuming a standard Python venv created using the exported requirements.txt
+ExecStart=/home/ubuntu/project-plumb/.venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 2 \
+          --timeout 120 \
+          --bind unix:/run/project_plumb.sock \
+          plumber_site.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

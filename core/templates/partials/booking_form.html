@@ -1,0 +1,181 @@
+{% comment %}
+Booking request form - implementation_plan.md §5 "Booking request
+form: name, phone, email (optional), address/locality, service,
+preferred date/time, urgency, and message", and PRD PAGE 5
+"[NOT BUILT] Full booking form".
+
+All eight planned inputs are here, plus consent. The plan's stated
+reason for keeping this separate from the short request form is
+retained: "a scheduled job needs a preferred slot and an urgency
+signal that a free-text issue box does not reliably carry".
+
+Why this also hands off to WhatsApp rather than POSTing:
+implementation_plan.md §5 wants this saved server-side and confirmed
+by the business. There is no server in this build, so rather than ship
+a form that silently goes nowhere, it reuses the same honest handoff
+the plan already sanctions for the request form - the customer can see
+exactly what is sent and taps Send themselves. When the Django view
+exists, give this form its action/method and a CSRF token, and replace
+the confirmation copy with a genuine "received, we will confirm"
+message. That confirmation wording is deliberately NOT used today,
+because nothing is received yet (implementation_plan.md §5, last
+paragraph of "Primary conversion actions").
+
+No arrival estimate is shown anywhere in this form - same rule.
+{% endcomment %}
+{% with p=fid|default:"b" %}
+<form class="qcard rv" id="{{ p }}-bookingForm" data-booking-form novalidate>
+  {% csrf_token %}
+
+  <div class="form-intro form-grid-full">
+    <h3>Request a booking</h3>
+    <p class="card-sub">For work you can plan &mdash; a new bathroom, a tank clean, grouting or a fitting swap.
+      Tell me when suits you and I'll confirm a slot.</p>
+  </div>
+
+  <div class="field form-group form-group--full">
+    <label for="{{ p }}-name">Full name</label>
+    <input id="{{ p }}-name" name="name" type="text" data-f="name"
+           placeholder="Your Name" autocomplete="name" maxlength="120"
+           aria-describedby="{{ p }}-name-err" required>
+    <p class="err" id="{{ p }}-name-err">Please enter your name.</p>
+  </div>
+
+  <div class="field form-group form-group--half">
+    <label for="{{ p }}-phone">Phone number</label>
+    <input id="{{ p }}-phone" name="phone" type="tel" data-f="phone"
+           inputmode="numeric" placeholder="10-digit mobile" autocomplete="tel"
+           maxlength="15"
+           aria-describedby="{{ p }}-phone-err" required>
+    <p class="err" id="{{ p }}-phone-err">Enter a valid 10-digit Indian mobile number.</p>
+  </div>
+
+  <div class="field form-group form-group--half">
+    <label for="{{ p }}-email">Email <span class="opt">(optional)</span></label>
+    <input id="{{ p }}-email" name="email" type="email" data-f="email"
+           placeholder="you@example.com" autocomplete="email" maxlength="254"
+           aria-describedby="{{ p }}-email-err">
+    <p class="err" id="{{ p }}-email-err">That email address doesn't look right.</p>
+  </div>
+
+  <div class="field form-group form-group--full">
+    <label for="{{ p }}-area">Address / locality</label>
+    <input id="{{ p }}-area" name="area" type="text" data-f="area"
+           placeholder="Current Address" maxlength="255"
+           {% if prefill_area %}value="{{ prefill_area }}"{% endif %}
+           aria-describedby="{{ p }}-area-err" required>
+    <p class="err" id="{{ p }}-area-err">Please tell me where the work is.</p>
+  </div>
+
+  <div class="field form-group form-group--full">
+    <label for="{{ p }}-service">Service needed</label>
+    <select id="{{ p }}-service" name="service" data-f="service"
+            aria-describedby="{{ p }}-service-err" required>
+      <option value="" {% if not prefill_service %}selected{% endif %}>Choose a service</option>
+      <optgroup label="Main services">
+        <option{% if prefill_service == "Leak Detection & Repair" %} selected{% endif %}>Leak Detection &amp; Repair</option>
+        <option{% if prefill_service == "Water Tank & Motor Work" %} selected{% endif %}>Water Tank &amp; Motor Work</option>
+        <option{% if prefill_service == "WC / Toilet Fittings" %} selected{% endif %}>WC / Toilet Fittings</option>
+        <option{% if prefill_service == "Washbasin & Bath Accessories Fittings" %} selected{% endif %}>Washbasin &amp; Bath Accessories Fittings</option>
+        <option{% if prefill_service == "Bathroom Tile Grouting" %} selected{% endif %}>Bathroom Tile Grouting</option>
+        <option{% if prefill_service == "New Bathroom Installation & Full Renovation" %} selected{% endif %}>New Bathroom Installation &amp; Full Renovation</option>
+      </optgroup>
+      <optgroup label="Other enquiries">
+        <option{% if prefill_service == "Drain & blockage cleaning" %} selected{% endif %}>Drain &amp; blockage cleaning</option>
+        <option{% if prefill_service == "Emergency fix" %} selected{% endif %}>Emergency fix</option>
+      </optgroup>
+      <option{% if prefill_service == "Not sure / other" %} selected{% endif %}>Not sure / other</option>
+    </select>
+    <p class="err" id="{{ p }}-service-err">Please pick the closest match.</p>
+  </div>
+
+  <div class="field form-group form-group--half">
+    <label for="{{ p }}-when">Preferred date</label>
+    <input id="{{ p }}-when" name="preferred_date" type="date" data-f="when"
+           aria-describedby="{{ p }}-when-err" required>
+    <p class="err" id="{{ p }}-when-err">Please choose a date that suits you.</p>
+  </div>
+
+  <div class="field form-group form-group--half">
+    <label for="{{ p }}-slot">Preferred time</label>
+    <select id="{{ p }}-slot" name="preferred_time" data-f="slot">
+      <option>Morning (9:30 &ndash; 13:00)</option>
+      <option>Afternoon (13:00 &ndash; 16:00)</option>
+      <option>Evening (16:00 &ndash; 19:00)</option>
+      <option>Any time that day</option>
+    </select>
+  </div>
+
+  <div class="field form-group form-group--full">
+    <label for="{{ p }}-urgency">How urgent is it?</label>
+    <select id="{{ p }}-urgency" name="urgency" data-f="urgency">
+      <option>Planned &mdash; the date above is fine</option>
+      <option>Soon &mdash; within two or three days</option>
+      <option>Urgent &mdash; today if possible</option>
+      <option>Emergency &mdash; water is running now</option>
+    </select>
+  </div>
+
+  <div class="field form-group form-group--full">
+    <label for="{{ p }}-message">Anything else I should know? <span class="opt">(optional)</span></label>
+    <textarea id="{{ p }}-message" name="message" data-f="message"
+              maxlength="2000"
+              placeholder="Floor number and lift, whether the water can be shut off, parts you have already bought&hellip;"></textarea>
+  </div>
+
+  {% comment %} Honeypot - see the note in lead_form.html. {% endcomment %}
+  <div class="hp form-grid-full" aria-hidden="true">
+    <label for="{{ p }}-website">Leave this field empty</label>
+    <input id="{{ p }}-website" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
+
+  {% comment %}
+  Consent, rewritten for DPDP s.6(1) - see the fuller note in
+  lead_form.html. This form collects two things the short form does not,
+  so both are named explicitly: an email address and a preferred date.
+  {% endcomment %}
+  <input type="hidden" name="consent_notice_version" value="{{ consent_notice_version }}">
+  <div class="field form-group form-group--full">
+    <label class="consent" for="{{ p }}-consent">
+      <input type="checkbox" id="{{ p }}-consent" name="consent" data-f="consent"
+             aria-describedby="{{ p }}-consent-err {{ p }}-consent-detail" required>
+      <span>I agree that {{ business_name }} may store my name, phone number, address, email if I
+        gave one, preferred date and message, and contact me about this booking. I understand the
+        message is delivered through WhatsApp, so Meta handles it too.</span>
+    </label>
+    <p class="consent-detail" id="{{ p }}-consent-detail">Used only to arrange and carry out this job
+      &mdash; never for marketing, never sold. You can withdraw consent or ask me to delete your
+      details at any time. <a href="/privacy/">Full privacy notice</a> &middot;
+      <a href="/cookies/">Cookies</a>.</p>
+    <p class="err" id="{{ p }}-consent-err">Please tick this so I can confirm your slot.</p>
+  </div>
+
+  {% comment %} Error summary - see the note in lead_form.html. {% endcomment %}
+  <p class="form-err-summary form-grid-full" id="{{ p }}-err-summary" data-error-summary role="alert"></p>
+
+  <button class="pill pill-navy form-grid-full" type="submit"
+          data-label-idle="Send booking request"
+          data-label-sending="Opening WhatsApp&hellip;"
+          data-label-sent="Booking sent to WhatsApp">Send booking request</button>
+
+  <div class="wa-note form-grid-full">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.7 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Z"/></svg>
+    <span>WhatsApp opens with everything filled in. <b>You must tap Send</b> there to deliver it.
+      I'll reply to confirm the slot &mdash; I won't promise an arrival time before we've spoken.</span>
+  </div>
+
+  <p class="form-ok form-grid-full" role="status">WhatsApp is opening &mdash; tap <b>Send</b> to finish. Didn't open?
+    <a data-wa-link href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}">Tap here</a>.</p>
+
+  <p class="form-err-api form-grid-full" role="alert"></p>
+
+  <noscript class="form-grid-full">
+    <div class="form-noscript">
+      <p><b>This form needs JavaScript to prefill your WhatsApp message.</b>
+        Please call or message instead &mdash; both work without it.</p>
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-light" href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I would like to book a plumbing visit.{% endfilter %}">Open WhatsApp</a>
+    </div>
+  </noscript>
+</form>
+{% endwith %}

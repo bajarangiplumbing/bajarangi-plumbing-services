@@ -1,0 +1,427 @@
+{% extends "base.html" %}
+{% comment %}
+PAGE 1 - Home. implementation_plan.md §5 "Home page";
+PRD_website_pages.md PAGE 1.
+
+Ported from PRD/index.html, keeping its delivered section order
+[2]-[9] exactly as PRD PAGE 1 records it: hero, request form, services
+bands, waves, method, gallery, reviews, stats. The two sections PRD
+PAGE 1 lists as "[NOT BUILT]" - the emergency band and the FAQ
+accordions - are appended after the stats row so the documented order
+is not disturbed.
+
+PRD PAGE 1 gaps closed here:
+  - Services bands had "no icons, no per-service descriptions, no
+    prices and no links". Links are now added: every band carries
+    pills to the real service pages, so all six are crawlable from
+    the home page. The bands and their keyword rails are kept, since
+    PRD PAGE 1 records the three <h3>s as real indexable headings.
+  - Service areas were "a plain sentence ... not a chip list linking
+    to area pages". Now a chip list; the three localities without a
+    page of their own stay as plain text rather than linking nowhere.
+  - About teaser had "no link to an about page because there is no
+    about page". There is one now, so the link is added.
+  - "[NOT BUILT] Emergency band" - built.
+  - "[NOT BUILT] FAQ (4-5 <details> accordions)" - built, five items.
+    PRD PAGE 1 notes this was also the plan's substitute for a blog.
+  - "section.gallery contains no heading at all" and "the carousel
+    announces nothing when the current card changes"
+    (implementation_plan.md §9) - an <h2> and a live region are added.
+
+DELIBERATELY STILL ABSENT, because PRD PAGE 1 conditions them on facts
+this build cannot establish:
+  - Hero trust strip ("★4.8 Google rating"): "there is no real Google
+    rating to show yet ... add the strip when a real rating exists".
+  - "Pay after work" promise: "restore it only if it is true".
+  - Prices / "from ₹" figures: §3 item 6 is unconfirmed.
+  - Real photos and real reviews: §3 items 9 and 11. Every photo slot
+    and review card stays visibly labelled as a placeholder, which
+    implementation_plan.md §8 requires rather than merely tolerates.
+
+CARRIED-OVER UNVERIFIED CLAIMS (implementation_plan.md §8 requires each
+to be confirmed true or reworded before publishing): "15+ years",
+"7+ localities". The "24/7" emergency call-outs claim is no longer on
+this page - it was removed site-wide rather than left pending.
+{% endcomment %}
+
+{% block title %}Bajarangi Plumbing Services &mdash; 15+ Years of Plumbing in Bhubaneswar | Book on WhatsApp{% endblock %}
+{% block description %}Independent plumber in Bhubaneswar with 15+ years of experience. Leak repair, water tank and motor work, WC and washbasin fittings, bathroom regrouting and bathroom renovation plumbing.{% endblock %}
+{% block canonical_path %}/{% endblock %}
+{% block og_path %}/{% endblock %}
+{% block og_title %}Bajarangi Plumbing Services &mdash; 15+ Years of Plumbing in Bhubaneswar{% endblock %}
+{% block og_description %}Independent plumber in Bhubaneswar. Leak repair, tank and motor work, bathroom fittings, regrouting and renovation plumbing. Message directly on WhatsApp.{% endblock %}
+
+{% comment %} On the home page the nav CTA can stay an in-page anchor, as in the prototype. {% endcomment %}
+{% block header %}{% include "partials/header.html" with cta_href="#request" %}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Home page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How soon can you come out?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on where you are and what is already booked that day. I will not promise an arrival time before we have spoken, because a time I cannot keep is worse than no time at all. Message me on WhatsApp with your locality and the problem and I will tell you honestly when I can be there."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does pricing work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The ₹150 visit charge applies ONLY if the customer declines the repair after inspection \u2014 there is no charge if the customer proceeds with the repair. I look at the job, tell you what it needs and what it will cost, and you decide before I start. The quote is itemised so you can see what is labour and what is parts. GST is not currently applicable. If I open something up and find the job is bigger than it looked, I stop and tell you before carrying on."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which parts of Bhubaneswar do you cover?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "I cover all areas within Bhubaneswar city limits. If you are just outside, ask anyway."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What should I do before you arrive?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Find your stop valve and close it if water is running. Move anything you care about away from the wet area. If it is a tank or motor problem, switch the motor off at the mains rather than leaving it running dry. A photo or short video sent on WhatsApp helps me bring the right parts the first time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I book you?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fill in the short form on this page. It opens WhatsApp with your name, number, locality and problem already written, and you tap Send. A website cannot send a WhatsApp message for you, so that last tap is yours. You can also just call."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+<span id="top"></span>
+
+{% comment %} ============ [2] HERO + 3D SCROLL PIPES ============ {% endcomment %}
+<section class="hero">
+  <div class="wrap">
+    <span class="hero-badge"><span class="dot"></span>15+ years &middot; Bhubaneswar</span>
+    <h1>Reliability that flows uninterrupted.</h1>
+    <p class="sub">Fifteen years of hands-on plumbing across Bhubaneswar &mdash; leak repair, tank and
+      motor work, bathroom fittings, regrouting and renovation plumbing. Message me directly on WhatsApp.</p>
+    <div class="hero-cta">
+      <a class="pill pill-orange" href="#request">Book on WhatsApp</a>
+      <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-ghost" href="#services">View services &rarr;</a>
+    </div>
+  </div>
+
+  <div class="hero-pipes piperig" aria-hidden="true">
+    <svg id="pipeHero" viewBox="0 0 760 700" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <linearGradient id="gTeal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E93B5"/><stop offset="1" stop-color="#186F8D"/></linearGradient>
+        <linearGradient id="gCyan" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A6E1EB"/><stop offset="1" stop-color="#77C7D6"/></linearGradient>
+        <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2E6BC4"/><stop offset="1" stop-color="#1D4A93"/></linearGradient>
+        <linearGradient id="gOrange" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBBA55"/><stop offset="1" stop-color="#E8942C"/></linearGradient>
+      </defs>
+
+      <g>
+        <path class="pipe-draw pipe-shadow" data-pipe="1" d="M40 250 H300 a34 34 0 0 1 34 34 V430 a34 34 0 0 0 34 34 H700" stroke-width="42" transform="translate(3,7)"/>
+        <path class="pipe-draw" data-pipe="1" d="M40 250 H300 a34 34 0 0 1 34 34 V430 a34 34 0 0 0 34 34 H700" stroke="url(#gTeal)" stroke-width="38"/>
+        <path class="pipe-draw pipe-hl" data-pipe="1" d="M40 238 H300 a34 34 0 0 1 22 22" stroke-width="6"/>
+      </g>
+      <g>
+        <path class="pipe-draw pipe-shadow" data-pipe="2" d="M150 60 V180 a30 30 0 0 0 30 30 H520 a30 30 0 0 1 30 30 V620" stroke-width="34" transform="translate(3,6)"/>
+        <path class="pipe-draw" data-pipe="2" d="M150 60 V180 a30 30 0 0 0 30 30 H520 a30 30 0 0 1 30 30 V620" stroke="url(#gCyan)" stroke-width="30"/>
+        <path class="pipe-draw pipe-hl" data-pipe="2" d="M140 60 V180 a30 30 0 0 0 20 20 H520" stroke-width="5"/>
+      </g>
+      <g>
+        <path class="pipe-draw pipe-shadow" data-pipe="3" d="M700 120 H460 a30 30 0 0 0-30 30 V300" stroke-width="34" transform="translate(3,6)"/>
+        <path class="pipe-draw" data-pipe="3" d="M700 120 H460 a30 30 0 0 0-30 30 V300" stroke="url(#gBlue)" stroke-width="30"/>
+        <path class="pipe-draw pipe-hl" data-pipe="3" d="M700 110 H460 a30 30 0 0 0-20 20" stroke-width="5"/>
+      </g>
+      <g>
+        <path class="pipe-draw pipe-shadow" data-pipe="4" d="M620 660 V430 a30 30 0 0 1 30-30 H740" stroke-width="34" transform="translate(3,6)"/>
+        <path class="pipe-draw" data-pipe="4" d="M620 660 V430 a30 30 0 0 1 30-30 H740" stroke="url(#gOrange)" stroke-width="30"/>
+        <path class="pipe-draw pipe-hl" data-pipe="4" d="M610 660 V430 a30 30 0 0 1 20-20" stroke-width="5"/>
+      </g>
+
+      <g class="joint" data-j="1"><rect x="316" y="266" width="36" height="36" rx="5" fill="#14456B"/></g>
+      <g class="joint" data-j="2"><rect x="532" y="222" width="32" height="32" rx="5" fill="#5FA9B8"/></g>
+      <g class="joint" data-j="3"><rect x="414" y="134" width="32" height="32" rx="5" fill="#1D4A93"/></g>
+      <g class="joint" data-j="4"><rect x="634" y="384" width="32" height="32" rx="5" fill="#D9871F"/></g>
+      <g class="cap" data-c="1"><circle cx="700" cy="464" r="30" fill="#186F8D"/><circle cx="700" cy="464" r="12" fill="#0E5570"/></g>
+      <g class="cap" data-c="2"><circle cx="550" cy="620" r="26" fill="#77C7D6"/><circle cx="550" cy="620" r="10" fill="#4FA7B8"/></g>
+      <g class="cap" data-c="3"><circle cx="430" cy="300" r="26" fill="#1D4A93"/><circle cx="430" cy="300" r="10" fill="#12356E"/></g>
+      <g class="cap" data-c="4"><circle cx="740" cy="400" r="26" fill="#E8942C"/><circle cx="740" cy="400" r="10" fill="#C6761A"/></g>
+      <path class="cap" data-c="2" d="M550 654 c14 20 14 34 0 34 c-14 0-14-14 0-34Z" fill="#8AD4E0"/>
+    </svg>
+  </div>
+</section>
+
+{% comment %} ============ [3] REQUEST / QUOTE ============ {% endcomment %}
+<section class="request" id="request">
+  <div class="req-pipes piperig" aria-hidden="true">
+    <svg id="pipeReq" viewBox="0 0 560 300" preserveAspectRatio="xMidYMid meet">
+      <path class="pipe-draw pipe-shadow" data-pipe="5" d="M60 20 V150 a30 30 0 0 0 30 30 H300" stroke-width="34" transform="translate(3,6)"/>
+      <path class="pipe-draw" data-pipe="5" d="M60 20 V150 a30 30 0 0 0 30 30 H300" stroke="url(#gCyan)" stroke-width="30"/>
+      <path class="pipe-draw pipe-shadow" data-pipe="6" d="M520 10 V110 a30 30 0 0 1-30 30 H360 a30 30 0 0 0-30 30 V290" stroke-width="34" transform="translate(3,6)"/>
+      <path class="pipe-draw" data-pipe="6" d="M520 10 V110 a30 30 0 0 1-30 30 H360 a30 30 0 0 0-30 30 V290" stroke="url(#gOrange)" stroke-width="30"/>
+    </svg>
+  </div>
+  <div class="wrap request-grid">
+    <div class="rv">
+      <h2>Request a precision quote</h2>
+      <p class="sub">Tell me what's wrong and I'll confirm a visit time. Transparent, itemised pricing
+        &mdash; no arrival time promised until I've spoken to you.</p>
+      <a class="emg" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>
+        <span><small>Emergency line</small><b>{{ phone_display|default:"+91 XXXXX XXXXX" }}</b></span>
+      </a>
+      <p class="sub" style="margin-top:26px">Planning the work rather than firefighting?
+        <a href="/contact/#booking" style="text-decoration:underline;text-underline-offset:3px;font-weight:700;color:var(--focus)">Use the longer booking form</a>
+        to pick a date and time.</p>
+    </div>
+
+    {% include "partials/lead_form.html" %}
+  </div>
+</section>
+
+{% comment %} ============ [4] SERVICES BANDS ============ {% endcomment %}
+<section class="services" id="services">
+  <h2 class="kicker rv">Our Services</h2>
+
+  <div class="band band-rose">
+    <h3>Bathroom fittings</h3>
+    <div class="band-links">
+      <a href="/services/wc-toilet-fittings/">WC / Toilet Fittings</a>
+      <a href="/services/washbasin-bath-accessories/">Washbasin &amp; Bath Accessories Fittings</a>
+    </div>
+  </div>
+  <div class="rail" data-dir="l"><div class="rail-track" aria-hidden="true">
+    <span>WC fitting</span><span>Concealed cisterns</span><span>Washbasins</span><span>Taps &amp; mixers</span><span>Bath accessories</span><span>Grab bars</span>
+    <span>WC fitting</span><span>Concealed cisterns</span><span>Washbasins</span><span>Taps &amp; mixers</span><span>Bath accessories</span><span>Grab bars</span>
+  </div></div>
+
+  <div class="band band-lav">
+    <h3>Bathroom renovation &amp; finishing</h3>
+    <div class="band-links">
+      <a href="/services/bathroom-tile-grouting/">Bathroom Tile Grouting</a>
+      <a href="/services/bathroom-installation-renovation/">New Bathroom Installation &amp; Full Renovation</a>
+    </div>
+  </div>
+  <div class="rail" data-dir="r"><div class="rail-track" aria-hidden="true">
+    <span>Grout repair</span><span>Existing-tile regrouting</span><span>New bathroom plumbing</span><span>Full renovation plumbing</span><span>First fix</span><span>Second fix</span>
+    <span>Grout repair</span><span>Existing-tile regrouting</span><span>New bathroom plumbing</span><span>Full renovation plumbing</span><span>First fix</span><span>Second fix</span>
+  </div></div>
+
+  <div class="band band-cyan">
+    <h3>Repairs &amp; water systems</h3>
+    <div class="band-links">
+      <a href="/services/leak-repair/">Leak Detection &amp; Repair</a>
+      <a href="/services/water-tank/">Water Tank &amp; Motor Work</a>
+    </div>
+  </div>
+  <div class="rail" data-dir="l"><div class="rail-track" aria-hidden="true">
+    <span>Leak detection</span><span>Concealed leaks</span><span>Overhead tank cleaning</span><span>Ground-level tank cleaning</span><span>Motor fitting</span><span>Water pressure</span>
+    <span>Leak detection</span><span>Concealed leaks</span><span>Overhead tank cleaning</span><span>Ground-level tank cleaning</span><span>Motor fitting</span><span>Water pressure</span>
+  </div></div>
+
+  {% comment %} [5] waves divider into the dark section {% endcomment %}
+  <svg class="waves" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 60 Q240 0 520 44 T1040 40 T1440 70 V110 H0Z" fill="#0E1D3F" opacity=".18"/>
+    <path d="M0 78 Q260 24 540 62 T1080 58 T1440 86 V110 H0Z" fill="#0E1D3F"/>
+  </svg>
+</section>
+
+{% comment %} ============ [6] DARK METHOD ============ {% endcomment %}
+<section class="method" id="method">
+  <div class="method-pipes" aria-hidden="true">
+    <span class="m-dot" style="width:74px;height:74px;background:#F5A733;top:6%;left:62%"></span>
+    <span class="m-dot" style="width:56px;height:56px;background:#1E7FA0;top:64%;left:20%"></span>
+    <span class="m-dot" style="width:64px;height:64px;background:#F5A733;bottom:8%;left:78%"></span>
+    <span class="m-dot" style="width:44px;height:44px;background:#2358A8;top:30%;left:8%"></span>
+  </div>
+
+  <div class="wrap">
+    <div class="method-head rv">
+      <h2><span class="w1">Listen</span>, <span class="w2">Locate</span>, <span class="w3">Repair</span>:<br>the method of my trade.</h2>
+      <p>Fifteen years teaches you that most jobs go wrong at the first step. So I start by
+        understanding the problem before touching a spanner.</p>
+    </div>
+    <div class="method-steps">
+      <div class="mstep rv"><b>01 &mdash; Listen</b><p>You tell me what's happening on WhatsApp. I ask the right questions before quoting anything.</p></div>
+      <div class="mstep rv"><b>02 &mdash; Locate</b><p>I trace the fault to its actual source, not just the symptom, so it's fixed once rather than patched twice.</p></div>
+      <div class="mstep rv"><b>03 &mdash; Repair</b><p>Clean, durable repair with quality parts. I test it, show you it works, and tidy up before leaving.</p></div>
+    </div>
+    <p class="sub" style="color:rgba(255,255,255,.6);margin-top:30px">
+      <a href="/about/" style="text-decoration:underline;text-underline-offset:3px;font-weight:700;color:#8AD4E0">More about how I work, and the fifteen years behind it &rarr;</a>
+    </p>
+  </div>
+
+  {% comment %}
+  Placed after .wrap on purpose: on desktop the container is
+  position:absolute so DOM order does not matter, and below 760px it
+  reflows into a static strip under the steps instead of being hidden.
+  See the @media(max-width:760px) note in core/static/css/main.css.
+  {% endcomment %}
+  <div class="method-photos">
+    <div class="m-photo" style="top:14%;left:6%;transform:rotate(-5deg)"><span>Work photo<br>placeholder</span></div>
+    <div class="m-photo" style="top:22%;right:8%;transform:rotate(4deg)"><span>Work photo<br>placeholder</span></div>
+    <div class="m-photo" style="bottom:6%;left:24%;transform:rotate(3deg)"><span>Work photo<br>placeholder</span></div>
+  </div>
+</section>
+
+{% comment %} ============ [7] ARC CAROUSEL GALLERY ============ {% endcomment %}
+<section class="gallery">
+  <div class="wrap">
+    <h2>Recent work around Bhubaneswar</h2>
+    <p class="gsub">Placeholders for now. Genuine job photographs go here once I have the
+      customer's permission to publish them.</p>
+    <div class="car-stage" id="carStage">
+      <div class="car-card"><span>Job photo 1</span></div>
+      <div class="car-card"><span>Job photo 2</span></div>
+      <div class="car-card"><span>Job photo 3</span></div>
+      <div class="car-card"><span>Job photo 4</span></div>
+      <div class="car-card"><span>Job photo 5</span></div>
+    </div>
+    <div class="car-nav">
+      <button class="car-btn" id="carPrev" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <p class="car-status" id="carStatus" role="status" aria-live="polite">1 of 5</p>
+      <button class="car-btn" id="carNext" type="button" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    </div>
+    <p class="story">Every leak tells a story. Across Bhubaneswar, I've spent fifteen years tracing
+      problems back to their root &mdash; and fixing them there.</p>
+  </div>
+</section>
+
+{% comment %} ============ [8] REVIEWS + AREAS ============ {% endcomment %}
+<section class="reviews" id="areas">
+  <div class="wrap">
+    <div class="rv">
+      {% comment %}
+      The five-star glyph that used to sit in this badge is gone. It was
+      styled to read as a rating badge while no rating existed, which is
+      the misleading part - the words "Reviews coming soon" beside five
+      filled stars still communicates "five stars".
+      {% endcomment %}
+      <h2>The plumber Bhubaneswar calls back.</h2>
+      <p class="sub">From everyday repairs to bathroom plumbing projects. I have not published any customer
+        reviews yet, because I do not have permission to quote anyone by name. When I do, they will
+        appear here with a real name attached.</p>
+      <div class="hero-cta">
+        <a class="pill pill-green" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call now</a>
+        <a class="pill pill-ghost" href="#request">Book on WhatsApp &rarr;</a>
+      </div>
+
+      <h3 style="margin-top:30px;font-size:1.05rem">Areas served</h3>
+      <p class="sub" style="margin-bottom:0">I provide plumbing services across all of Bhubaneswar, Odisha.</p>
+      <p class="sub" style="margin-top:10px;font-size:.92rem">If you are just outside the city limits, ask anyway &mdash; I may still be able to help.</p>
+    </div>
+    {% comment %}
+    Three invented testimonials were removed from this column (compliance
+    review, September 2026): five stars each, a quote, and "Placeholder
+    name · <locality>". See the long note in pages/service_base.html for
+    the full reasoning and for the bar a real review has to clear.
+
+    The section now runs as a single column rather than 1fr / 1.1fr, so
+    the "Areas served" content it also carries fills the width instead of
+    sitting beside an empty grid track. The .rcards / .rcard / .rc1-3
+    rules were deleted from main.css in the same change.
+    {% endcomment %}
+  </div>
+</section>
+
+{% comment %} ============ [9] STATS ============ {% endcomment %}
+<section class="stats">
+  <div class="wrap stats-row">
+    <div class="stat rv"><b>15+</b><span>Years of hands-on plumbing experience</span></div>
+    {% comment %}
+    "7+" became "7". The site lists exactly seven localities here, on
+    /contact/, in /terms/ and on every service page; "7+" asserted more
+    than it could show. Seven is verifiable from the page itself.
+    {% endcomment %}
+    <div class="stat rv"><b>100%</b><span>Bhubaneswar coverage area</span></div>
+    {% comment %} The "24/7 / Emergency call-outs" stat was removed rather than
+    reworded: it was an UNVERIFIED availability claim (implementation_plan.md
+    §14.8) and §8 "Content rules" forbids publishing false emergency claims.
+    Nothing replaces it, because inventing a substitute figure would repeat the
+    original mistake. .stats-row is auto-fit, so two tiles stay balanced. {% endcomment %}
+  </div>
+</section>
+
+{% comment %} ==== FAQ - PRD PAGE 1 "[NOT BUILT] FAQ (4-5 <details> accordions)" ==== {% endcomment %}
+<section class="section" id="faq">
+  <div class="wrap">
+    <h2>Questions people ask before they call</h2>
+    <div class="faq">
+      <details>
+        <summary>How soon can you come out?</summary>
+        <div class="answer">
+          <p>It depends on where you are and what is already booked that day. I will not promise an
+            arrival time before we have spoken, because a time I cannot keep is worse than no time
+            at all.</p>
+          <p>Message me with your locality and the problem and I will tell you honestly when I can
+            be there.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How does pricing work?</summary>
+        <div class="answer">
+          <p>The ₹150 visit charge applies ONLY if the customer declines the repair after inspection &mdash; there is no charge if the customer proceeds with the repair. I look at the job, tell you what it needs and what it will cost, and you decide before I start. The quote is itemised, so you can see what is labour and what is parts.</p>
+          <p>GST is not currently applicable, because turnover is below the ₹20 lakh/year threshold requiring registration under Indian GST law.</p>
+          <p>If I open something up and find the job is bigger than it looked, I stop and tell you
+            before carrying on. No surprises at the end.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Which parts of Bhubaneswar do you cover?</summary>
+        <div class="answer">
+          <p>I cover all areas within Bhubaneswar city limits.</p>
+          <p>If you are just outside, ask anyway &mdash; it often depends on the day's schedule.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What should I do before you arrive?</summary>
+        <div class="answer">
+          <p>Find your stop valve and close it if water is running. Move anything you care about
+            away from the wet area. If it is a tank or motor problem, switch the motor off at the
+            mains rather than leaving it running dry.</p>
+          <p>A photo or a short video sent on WhatsApp genuinely helps &mdash; it means I can often
+            bring the right part the first time.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How do I book you?</summary>
+        <div class="answer">
+          <p>Fill in the <a href="#request">short form on this page</a>. It opens WhatsApp with your
+            name, number, locality and problem already written, and you tap Send. A website cannot
+            send a WhatsApp message on your behalf, so that last tap is yours.</p>
+          <p>Or just call. That works too.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+{% comment %} ==== GENERIC CONTACT BAND ==== {% endcomment %}
+<section class="emergency">
+  <div class="wrap emergency-inner">
+    <div>
+      <h2>Need plumbing help?</h2>
+      <p>Call to explain the problem, or send a general enquiry if the work can be planned.</p>
+    </div>
+    <div class="cta">
+      <a class="pill pill-orange" href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">Call {{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a class="pill pill-light" href="/contact/#request">Send an enquiry &rarr;</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% comment %}
+Cookie policy - added by the September 2026 compliance review.
+
+THE CONCLUSION THIS PAGE DOCUMENTS: this site does not need a cookie
+consent banner, and adding one would be worse than not adding one.
+
+The reasoning, which was checked against the code rather than assumed:
+
+  - The only cookies set are Django's `csrftoken` and `sessionid`.
+    core/security.py and plumber_site/settings.py contain no set_cookie
+    call, and a grep for `document.cookie` across static/js returns
+    nothing.
+  - `csrftoken` is a security control - it is what stops a third-party
+    page submitting the lead form on a visitor's behalf. `sessionid` is
+    only ever issued at /admin/ login, i.e. to the owner, never to a
+    visitor.
+  - There is no analytics, no Google Tag Manager, no advertising pixel, no
+    embedded map, no embedded video, no web font fetched from a CDN, and no
+    third-party script of any kind. base.html loads exactly one stylesheet
+    and one script, both same-origin. So there is no non-essential storage
+    to consent to.
+  - The DPDP Act 2023 requires consent for processing personal data, which
+    is what brings tracking cookies into scope. Strictly necessary
+    functional cookies of this kind are not what that duty is aimed at, and
+    there is nothing here to opt out of.
+
+Why not add a banner "to be safe": a consent dialogue that controls nothing
+trains people to dismiss consent dialogues, and it misrepresents the site
+as doing tracking it does not do. It is also the single most common
+cargo-culted compliance artefact, so its presence alongside no analytics
+would suggest the rest of the compliance work was copied rather than
+reasoned about.
+
+IF THAT EVER CHANGES: the moment any analytics, embedded map, embedded
+video, remote font or advertising tag is added, this page stops being
+accurate and a real consent mechanism becomes necessary - prior, opt-in,
+granular, and as easy to refuse as to accept. Change this page in the same
+commit as the tag, not afterwards.
+{% endcomment %}
+
+{% block title %}Cookie Policy | {{ business_name }}{% endblock %}
+{% block description %}This website sets two strictly necessary cookies and runs no analytics or advertising trackers. Here is exactly what they are and why there is no consent banner.{% endblock %}
+{% block canonical_path %}/cookies/{% endblock %}
+{% block og_path %}/cookies/{% endblock %}
+{% block og_title %}Cookie Policy | {{ business_name }}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Cookie policy page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Cookie policy" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Cookie policy</span></li>
+  </ol>
+</nav>
+
+<section class="pagehead">
+  <div class="wrap">
+    <h1>Cookie policy</h1>
+    <p class="promise">Two cookies, both doing a necessary job, neither of them watching you. No
+      analytics, no advertising, and no consent pop-up &mdash; because there is nothing here to
+      consent to.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="prose">
+      <p class="lead">This page lists every cookie this website sets and explains why you have not been
+        shown a cookie banner. Last updated {{ policy_updated }}.</p>
+
+      <h2>Why there is no cookie pop-up</h2>
+      <p>Cookie banners exist to get your permission before a site starts tracking you. This site does
+        not track you, so there is nothing to ask permission for.</p>
+      <p>To be specific about what that means: there is no Google Analytics, no Google Tag Manager, no
+        Facebook or Meta pixel, no advertising tag, no heatmap or session-recording tool, no embedded
+        map, no embedded video, and no font or script loaded from someone else's server. The whole site
+        is one stylesheet and one small script, both served from this domain.</p>
+      <p>I would rather tell you that plainly than show you a dialogue that pretends to give you a
+        choice about something that is not happening.</p>
+
+      <h2>The cookies that are set</h2>
+      <p>Both are what the law calls strictly necessary: remove them and the site either stops being
+        secure or stops working.</p>
+
+      <h3>csrftoken</h3>
+      <ul>
+        <li><strong>What it does:</strong> proves that a form submission came from this website and not
+          from a different site acting in your name. It is a security measure, and it is the reason
+          nobody can make your browser send me a plumbing enquiry without you knowing.</li>
+        <li><strong>Set when:</strong> you load any page with a form on it.</li>
+        <li><strong>Contains:</strong> a random token. No name, no number, nothing about you.</li>
+        <li><strong>Lifetime:</strong> up to one year, or until you clear your browser data.</li>
+        <li><strong>First or third party:</strong> first party. It never leaves this domain.</li>
+      </ul>
+
+      <h3>sessionid</h3>
+      <ul>
+        <li><strong>What it does:</strong> keeps me logged in to the admin console where I read
+          enquiries.</li>
+        <li><strong>Set when:</strong> only when someone signs in at the staff login. As an ordinary
+          visitor you will never receive this cookie.</li>
+        <li><strong>Contains:</strong> a random session identifier.</li>
+        <li><strong>Lifetime:</strong> two weeks, or until sign-out.</li>
+        <li><strong>First or third party:</strong> first party.</li>
+      </ul>
+
+      <h2>Other storage on your device</h2>
+      <p>None. An earlier version of this website kept a copy of what you typed into the form in your
+        browser's local storage. That was removed, and the site now actively clears it from any device
+        that still has it left over from a previous visit.</p>
+
+      <h2>If you want to block them anyway</h2>
+      <p>You can. Every browser lets you block or delete cookies for a specific site, usually under
+        Settings, then Privacy. Blocking <code>csrftoken</code> will stop the enquiry forms working,
+        because the server will not be able to tell a genuine submission from a forged one. Everything
+        else on the site &mdash; every page, the phone number, the WhatsApp links &mdash; works fine
+        without cookies.</p>
+
+      <h2>If this ever changes</h2>
+      <p>If I ever add anything that does track you &mdash; a visitor-counting tool, an embedded map, an
+        advertising tag &mdash; then this page will be updated before it goes live and you will be
+        asked for consent properly first, with a genuine option to refuse. I will not quietly start
+        tracking and rely on a banner you clicked past.</p>
+
+      <h2>Questions</h2>
+      <ul>
+        {% if grievance_email %}<li>Email: <a href="mailto:{{ grievance_email }}">{{ grievance_email }}</a></li>{% endif %}
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+      </ul>
+
+      <p><a href="/privacy/">Privacy notice</a> &middot; <a href="/terms/">Terms of service</a> &middot;
+        <a href="/refunds/">Cancellations &amp; refunds</a> &middot; <a href="/contact/">Contact</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}

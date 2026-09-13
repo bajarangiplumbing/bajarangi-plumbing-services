@@ -1,0 +1,158 @@
+{% comment %}
+Footer - PRD_website_pages.md §2.3.
+
+Ported from PRD/index.html, plus the three things §2.3 records as
+"[NOT BUILT - NO HTML COUNTERPART] in the footer, with its reasons
+intact":
+  1. a NAP block in an <address> element (implementation_plan.md §8
+     requires the name/address/phone to match the Google Business
+     Profile byte-for-byte);
+  2. service list links and area list links - §2.3 notes the
+     prototype footer had "no navigation list at all", so services
+     and areas were reachable only through the top nav anchors;
+  3. separate working-hours and emergency-hours blocks, instead of
+     the single compressed line the prototype used.
+Privacy policy and Terms of service now point at real pages rather
+than the prototype's dead href="#".
+
+TWO ITEMS STILL BLOCKED ON BUSINESS DATA - implementation_plan.md §3:
+  - §3 item 1, street / service address: NOT filled in below, because
+    it is not in either source document and must not be invented. The
+    <address> element carries only what is verifiable today (city and
+    state). Add streetAddress at the marked slot, and to the JSON-LD
+    in base.html, once §3 item 1 is confirmed. Until then the NAP
+    consistency requirement in §8 cannot be met.
+  - §3 item 1, email address: no mailto: is emitted for the same
+    reason. Add it at the marked slot when confirmed.
+  - §3 item 2, emergency hours: the prototype's "Emergencies 24/7"
+    line is NOT carried into this footer. The claim was UNVERIFIED and
+    has been removed site-wide; no hours line is emitted here at all.
+    If §3 item 2 is ever confirmed, a real window may be added here -
+    and must then agree with /contact/ and the published business hours.
+{% endcomment %}
+<footer>
+  <div class="wrap foot-row">
+    <a class="logo" href="/">
+      <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <rect x="1.5" y="1.5" width="37" height="37" rx="10" fill="#8AD4E0"/>
+        <path d="M11 28V18a9 9 0 0 1 18 0" stroke="#0E1D3F" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M20 28v-7" stroke="#F5A733" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M11 28h18" stroke="#2358A8" stroke-width="3.4" stroke-linecap="round"/>
+      </svg>
+      Bajarangi Plumbing Services
+    </a>
+    <div class="foot-contact">
+      <a href="tel:{{ phone_tel|default:'+91XXXXXXXXXX' }}">{{ phone_display|default:"+91 XXXXX XXXXX" }}</a>
+      <a href="https://wa.me/{{ wa_number|default:'91XXXXXXXXXX' }}?text={% filter urlencode %}Hi Bajarangi Plumbing Services, I need a plumber in Bhubaneswar.{% endfilter %}">WhatsApp</a>
+    </div>
+    <a class="pill pill-orange" href="/contact/#request">Book on WhatsApp</a>
+  </div>
+
+  <div class="wrap foot-nav">
+    <div>
+      <h2>Services</h2>
+      <ul>
+        <li><a href="/services/leak-repair/">Leak Detection &amp; Repair</a></li>
+        <li><a href="/services/water-tank/">Water Tank &amp; Motor Work</a></li>
+        <li><a href="/services/wc-toilet-fittings/">WC / Toilet Fittings</a></li>
+        <li><a href="/services/washbasin-bath-accessories/">Washbasin &amp; Bath Accessories Fittings</a></li>
+        <li><a href="/services/bathroom-tile-grouting/">Bathroom Tile Grouting</a></li>
+        <li><a href="/services/bathroom-installation-renovation/">New Bathroom Installation &amp; Full Renovation</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Areas served</h2>
+      <p>I provide plumbing services across all of Bhubaneswar, Odisha.</p>
+    </div>
+    <div>
+      <h2>Hours</h2>
+      {% comment %}
+      THE 24/7 CLAIM WAS REMOVED HERE - compliance review, September 2026.
+
+      This block used to read "Emergency call-outs / 24 hours, all seven
+      days", with the qualifier "(availability to be confirmed before
+      launch)" inside a <span class="sr">. That span is visually hidden, so
+      the caveat was announced to screen-reader users and hidden from
+      everyone else - the disclosure reached the smallest possible audience
+      while the claim reached all of it.
+
+      It was also contradicted by the site's own code and copy:
+        - base.html's JSON-LD openingHoursSpecification publishes
+          Mon-Sun 09:30-19:00, which is what Google would surface;
+        - contact.html deliberately removed its "Round the clock" row;
+        - terms.html declines to promise any arrival time.
+
+      An unqualified 24/7 availability claim that the business cannot meet
+      is a false description of a service under s.2(28) of the Consumer
+      Protection Act 2019. The wording below is what is actually true:
+      out-of-hours work happens, is charged differently (see /terms/), and
+      depends on whether he is free.
+
+      If genuine round-the-clock cover ever exists, change this line, the
+      JSON-LD in base.html and contact.html together - never just one.
+      {% endcomment %}
+      <ul class="foot-hours">
+        <li><b>General plumbing</b>Monday to Sunday, 9:30&nbsp;AM&nbsp;&ndash;&nbsp;7:00&nbsp;PM</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contact</h2>
+      {% comment %}
+      Trader identity. Every value comes from core/context_processors.py
+      and each line is guarded, so an unset detail is simply absent rather
+      than rendered as a placeholder - the previous version of this file
+      published "+91 XXXXX XXXXX" as a working phone number.
+
+      core/checks.py (core.E003/E004/E005) blocks a production start while
+      the proprietor's name, the street address or the contact email is
+      missing, so these guards should never all be false on a live site.
+      {% endcomment %}
+      <address>
+        <strong>{{ business_name }}</strong><br>
+        {% if business_proprietor %}Proprietor: {{ business_proprietor }}<br>{% endif %}
+        {% for line in business_address_lines %}{{ line }}<br>{% endfor %}
+        {% if phone_is_real %}<a href="tel:{{ phone_tel }}">{{ phone_display }}</a><br>{% endif %}
+        {% if business_email %}<a href="mailto:{{ business_email }}">{{ business_email }}</a><br>{% endif %}
+        {% if business_gstin %}GSTIN: {{ business_gstin }}<br>{% endif %}
+        Independent plumber
+      </address>
+    </div>
+  </div>
+
+  <div class="wordmark-strip" aria-hidden="true">
+    <div class="wordmark-track">
+      <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2800 220" width="2800" height="220">
+        <defs>
+          <pattern id="wmArt1" width="48" height="48" patternUnits="userSpaceOnUse">
+            <rect width="48" height="48" fill="#123D5A"/>
+            <path d="M-12 12L12-12M0 48L48 0M36 60L60 36" fill="none" stroke="#21B6C7" stroke-width="10"/>
+            <path d="M-12 36L36-12M12 60L60 12" fill="none" stroke="#F5B942" stroke-width="4"/>
+          </pattern>
+        </defs>
+        <text x="40" y="165" fill="url(#wmArt1)" font-family="Arial,Helvetica,sans-serif" font-size="150" font-weight="900" letter-spacing="2">BAJARANGI PLUMBING SERVICES</text>
+      </svg>
+
+      <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2800 220" width="2800" height="220">
+        <defs>
+          <pattern id="wmArt2" width="48" height="48" patternUnits="userSpaceOnUse">
+            <rect width="48" height="48" fill="#123D5A"/>
+            <path d="M-12 12L12-12M0 48L48 0M36 60L60 36" fill="none" stroke="#21B6C7" stroke-width="10"/>
+            <path d="M-12 36L36-12M12 60L60 12" fill="none" stroke="#F5B942" stroke-width="4"/>
+          </pattern>
+        </defs>
+        <text x="40" y="165" fill="url(#wmArt2)" font-family="Arial,Helvetica,sans-serif" font-size="150" font-weight="900" letter-spacing="2">BAJARANGI PLUMBING SERVICES</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wrap foot-bottom">
+    {% comment %}
+    The year was hard-coded as 2026 and would have silently gone stale.
+    `current_year` is computed in Asia/Kolkata, the business's own
+    timezone, so it rolls over when it does for the owner.
+    {% endcomment %}
+    <span>&copy; {{ current_year }} {{ business_name }}. Independent service &mdash; not affiliated with any marketplace. Bhubaneswar, Odisha.</span>
+    <span><a href="/privacy/">Privacy</a> &middot; <a href="/cookies/">Cookies</a> &middot;
+      <a href="/terms/">Terms</a> &middot; <a href="/refunds/">Cancellations &amp; refunds</a></span>
+  </div>
+</footer>

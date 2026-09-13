@@ -1,0 +1,63 @@
+{% comment %}
+Floating rounded pill nav — PRD_website_pages.md §2.1.
+
+Ported from PRD/index.html with one deliberate correction: the
+prototype's `.navbar .pill-orange{display:none}` at <=920px is gone.
+PRD §2.1 records that rule as "[DIFFERS - regression against a core
+rule]" and implementation_plan.md §9 makes fixing it the top design
+priority, so the primary CTA now never collapses - it only shortens
+its label. See core/static/css/main.css, the @media(max-width:920px)
+block.
+
+Nav targets: PRD §1.2's sitemap has no /services/ or /areas/ index
+page, so Services and Areas point at the home-page sections, which
+now carry real links to all six service pages and all four area
+pages. About and Contact point at their own pages, which resolves the
+label-to-target mismatches PRD §1.1 flagged in the prototype.
+
+`nav_active` is optional and is supplied by the page template via the
+`header` block in base.html.
+{% endcomment %}
+{% comment %}
+Wrapped in <header> (compliance review, September 2026). The page
+previously had no banner landmark at all - <nav> was the topmost element,
+so a screen-reader user navigating by landmark had no way to reach the
+site header as a region. `role="banner"` is implicit on a <header> that is
+not nested inside an article or section.
+{% endcomment %}
+<header>
+<nav class="navbar" aria-label="Primary">
+  <a class="logo" href="/">
+    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <rect x="1.5" y="1.5" width="37" height="37" rx="10" fill="#14306E"/>
+      <path d="M11 28V18a9 9 0 0 1 18 0" stroke="#8AD4E0" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M20 28v-7" stroke="#F5A733" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M11 28h18" stroke="#2358A8" stroke-width="3.4" stroke-linecap="round"/>
+    </svg>
+    <span class="logo-word">Bajarangi Plumbing Services</span>
+  </a>
+
+  <div class="nav-links" id="navLinks">
+    <a href="/#services"{% if nav_active == "services" %} aria-current="page"{% endif %}>Services</a>
+    <a href="/#areas"{% if nav_active == "areas" %} aria-current="page"{% endif %}>Areas</a>
+    <a href="/about/"{% if nav_active == "about" %} aria-current="page"{% endif %}>About</a>
+    <a href="/contact/"{% if nav_active == "contact" %} aria-current="page"{% endif %}>Contact</a>
+  </div>
+
+  <a class="pill pill-orange" href="{{ cta_href|default:'/contact/#request' }}">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.7 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a12 12 0 0 1-5.6-4.9c-.4-.6-.7-1.4-.7-2 0-.6.3-1 .6-1.3.2-.2.4-.2.6-.2h.4c.2 0 .4 0 .6.5l.7 1.7c.1.2 0 .4-.1.5l-.4.5c-.1.1-.2.3-.1.5.3.6.8 1.2 1.3 1.6.5.4 1 .6 1.3.8.2.1.4 0 .5-.1l.5-.6c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.4.3.1.2.1.5 0 .7Z"/></svg>
+    <span class="nav-cta-label-full">Book on WhatsApp</span>
+    <span class="nav-cta-label-short">Book</span>
+  </a>
+
+  {% comment %}
+  data-label-open / data-label-close let main.js keep the accessible name
+  in step with aria-expanded. It used to toggle aria-expanded correctly but
+  leave the label reading "Open menu" while the menu was open.
+  {% endcomment %}
+  <button class="burger" id="burger" aria-expanded="false" aria-controls="navLinks"
+          aria-label="Open menu" data-label-open="Open menu" data-label-close="Close menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+</nav>
+</header>

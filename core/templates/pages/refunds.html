@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% comment %}
+Cancellation and refund policy - added by the September 2026 compliance
+review.
+
+WHY THIS PAGE EXISTS AT ALL, GIVEN THERE IS NO CHECKOUT
+-------------------------------------------------------
+The site takes no online payment, so there is no card transaction to
+reverse. The instinct is therefore that no refund policy is needed. That
+is wrong for two reasons:
+
+  1. Money still changes hands - on completion, in person, plus any
+     call-out or inspection charge and any specially-ordered parts. A
+     consumer needs to know before they book what happens to those if the
+     job is cancelled, if nobody is home, or if the work turns out to be
+     defective.
+  2. The Consumer Protection Act 2019 treats a deficiency in service as
+     actionable regardless of how payment was taken, and the Consumer
+     Protection (E-Commerce) Rules 2020 expect a trader soliciting
+     business online to publish its cancellation and refund position.
+     Silence is the risk, not the absence of a payment gateway.
+
+WHAT IS DELIBERATELY NOT ON THIS PAGE
+-------------------------------------
+Figures. The inspection charge, the emergency rate and whether GST applies
+are unresolved business decisions (implementation_plan.md §3 item 6), and
+no price appears anywhere on this site. Inventing one here would be a
+false statement to a consumer, which is precisely the failure mode this
+review exists to remove. The page instead commits to the PROCESS - that
+you are told the amount before I travel, and never after - which is a
+promise that can actually be kept today.
+
+The commitments that ARE made here are deliberately consumer-favourable
+(free cancellation before travel, defective work put right at no charge).
+Being more generous than the law requires carries no legal risk; being
+vague does. When the figures exist, insert them in the marked places.
+{% endcomment %}
+
+{% block title %}Cancellations &amp; Refunds | {{ business_name }}{% endblock %}
+{% block description %}How to cancel a plumbing visit with {{ business_name }}, what happens to any call-out charge, and what I do if work turns out to be defective.{% endblock %}
+{% block canonical_path %}/refunds/{% endblock %}
+{% block og_path %}/refunds/{% endblock %}
+{% block og_title %}Cancellations &amp; Refunds | {{ business_name }}{% endblock %}
+{% block actionbar %}{% include "partials/mobile_action_bar.html" with wa_context="Cancellations and refunds page" %}{% endblock %}
+
+{% block ld_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site_url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Cancellations and refunds" }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block content %}
+
+<nav class="wrap crumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><span aria-current="page">Cancellations &amp; refunds</span></li>
+  </ol>
+</nav>
+
+<section class="pagehead">
+  <div class="wrap">
+    <h1>Cancellations &amp; refunds</h1>
+    <p class="promise">You pay when the work is done, not before. So there is rarely anything to refund
+      &mdash; but here is exactly where you stand if you cancel, if I cannot come, or if something I
+      fixed does not stay fixed.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap">
+    <div class="prose">
+      <p class="lead">This page covers cancelling a visit, charges that may still apply, and what
+        happens if work is defective. Last updated {{ policy_updated }}.</p>
+
+      <h2>There is no payment on this website</h2>
+      <p>This site has no checkout, no payment gateway and no card form. I never ask for card or bank
+        details through this website or over WhatsApp, and nobody legitimately acting for me ever
+        will. Payment happens in person when the agreed work is finished.</p>
+      <p>That means in the ordinary case there is nothing to refund, because you have not paid anything
+        yet. The rest of this page is about the situations where that is not the whole story.</p>
+
+      <h2>Cancelling a visit</h2>
+      <ul>
+        <li><strong>Before I set off: free, always.</strong> Call or message and tell me. There is no
+          cancellation fee and no notice period. I would far rather know than travel to a locked
+          door.</li>
+        <li><strong>After I have set off:</strong> if a call-out or inspection charge was agreed, it may
+          still apply, because the travel has already happened. You will have been told that amount
+          before I left &mdash; see below.</li>
+        <li><strong>Once work has started:</strong> you pay for the work done and any parts already
+          fitted up to that point, and nothing more. I will tell you where things stand before I
+          stop.</li>
+      </ul>
+      <p>Submitting a form on this website is a request, not a confirmed appointment, so there is
+        nothing to cancel until I have replied and we have agreed a time between us. See the
+        <a href="/terms/">terms of service</a>.</p>
+
+      <h2>If nobody is there when I arrive</h2>
+      <p>If I arrive at an agreed time and cannot get access, the call-out charge you were told about
+        may apply. I will always try to call first rather than simply leaving and charging you. If
+        something has come up, a message costs you nothing and saves us both the problem.</p>
+
+      <h2>If I have to cancel</h2>
+      <p>If I cannot make an agreed appointment, I will tell you as soon as I know rather than leave you
+        waiting, and you owe me nothing. If a job overruns and puts your slot at risk, you hear that
+        from me, not from silence. Where an earlier job has become an emergency, I will say so.</p>
+
+      <h2>Call-out and inspection charges</h2>
+      <p>The ₹150 visit charge applies ONLY if the customer declines the repair after inspection &mdash; there is no charge if the customer proceeds with the repair. This charge is told to you <strong>before I travel</strong> &mdash; not on
+        arrival, and not afterwards.</p>
+      <p>If you were never told a charge before I set off, you do not owe one.</p>
+
+      <h2>Taxes</h2>
+      <p>GST is not currently applicable, because turnover is below the ₹20 lakh per year threshold requiring registration under Indian GST law.</p>
+
+      <h2>Parts</h2>
+      <ul>
+        <li><strong>Standard parts</strong> that have not been fitted can normally be returned, and you
+          are not charged for them.</li>
+        <li><strong>Parts ordered specially for your job</strong> &mdash; a particular mixer, an unusual
+          size, anything I would not otherwise carry &mdash; may not be returnable. If a job needs one,
+          I will tell you that before ordering it, so you can decide with that in mind.</li>
+        <li><strong>Parts you supplied yourself</strong> are between you and wherever you bought them.
+          My work on them is still my responsibility.</li>
+      </ul>
+
+      <h2>If the work is defective</h2>
+      <p>This is the part that matters most, so it is the plainest.</p>
+      <p><strong>If a repair I carried out fails because of my work, tell me and I will come back and
+        put it right at no charge.</strong> Not a credit, not an argument &mdash; I come back and fix
+        it.</p>
+      <p>If it cannot reasonably be put right, we will agree a fair reduction or refund of what you paid
+        for that work. What I cannot take responsibility for is a different fault elsewhere in the same
+        system, wear on parts you supplied, or work that someone else has altered afterwards.</p>
+      <p>Any guarantee specific to your job is stated in the quote I send you before the work starts,
+        and that written agreement is what governs it.</p>
+
+      <h2>How to raise it</h2>
+      <p>Tell me first &mdash; it is almost always the fastest route, and most things are a
+        misunderstanding or a ten-minute return visit.</p>
+      <ul>
+        {% if phone_is_real %}<li>Phone: <a href="tel:{{ phone_tel }}">{{ phone_display }}</a></li>{% endif %}
+        {% if business_email %}<li>Email: <a href="mailto:{{ business_email }}">{{ business_email }}</a>
+          &mdash; best if you want a written record</li>{% endif %}
+        <li>WhatsApp: <a href="https://wa.me/{{ wa_number }}?text={% filter urlencode %}Hi {{ business_name }}, I need to raise something about a job.{% endfilter %}">message me</a></li>
+      </ul>
+      <p>I aim to reply within two working days and to agree a way forward within seven. Please keep the
+        quote I sent you and, if you can, a photograph of the problem.</p>
+
+      <h2>Your rights are not affected</h2>
+      <p>Nothing on this page reduces your rights under the Consumer Protection Act 2019. If we cannot
+        resolve something between us, you can take it to the District Consumer Disputes Redressal
+        Commission for Khordha district, or use the National Consumer Helpline. You have two years from
+        the cause of action to bring a complaint, which is why I keep records of completed work for
+        about {{ retention_job_months }} months &mdash; see the
+        <a href="/privacy/">privacy notice</a>.</p>
+
+      <p><a href="/terms/">Terms of service</a> &middot; <a href="/privacy/">Privacy notice</a> &middot;
+        <a href="/cookies/">Cookie policy</a> &middot; <a href="/contact/">Contact</a></p>
+    </div>
+  </div>
+</section>
+{% endblock %}
