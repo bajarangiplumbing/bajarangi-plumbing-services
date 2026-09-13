@@ -149,5 +149,5 @@ whitenoise==6.12.0 \
 
 
 
-django-otp>=1.7.3
-django-otp[qrcode]>=1.7.3
+django-otp==1.7.3
+django-otp[qrcode]==1.7.3
