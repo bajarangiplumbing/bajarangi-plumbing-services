@@ -167,3 +167,6 @@ PRD/                   Product requirements (gitignored, not deployed)
 | CI/CD | GitLab CI (SAST, Secret Detection, Dependency Scanning) |
 | Linting | Ruff |
 | Deployment target | AWS EC2 + Nginx + Gunicorn |
+
+
+ok done bye
