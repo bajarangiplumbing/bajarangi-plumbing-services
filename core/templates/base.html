@@ -68,9 +68,10 @@ STILL OUTSTANDING IN THE HEAD, and not faked here:
   "priceRange": "₹₹",
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "Nimapara",
-    "addressRegion": "Odisha",
-    "postalCode": "",
+    "streetAddress": "{{ business_address_street }}{% if business_address_locality %}, {{ business_address_locality }}{% endif %}",
+    "addressLocality": "{{ business_address_city }}",
+    "addressRegion": "{{ business_address_state }}",
+    "postalCode": "{{ business_address_pin }}",
     "addressCountry": "IN"
   },
   "areaServed": [

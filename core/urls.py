@@ -32,6 +32,14 @@ sitemaps_dict = {
 }
 
 
+def sitemap_view(request):
+    response = sitemap(request, sitemaps=sitemaps_dict)
+    response["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response["Pragma"] = "no-cache"
+    response["Expires"] = "0"
+    return response
+
+
 def page(route, template, name):
     return path(route, PageView.as_view(template_name=template), name=name)
 
@@ -136,8 +144,7 @@ urlpatterns = [
     ),
     path(
         "sitemap.xml",
-        sitemap,
-        {"sitemaps": sitemaps_dict},
+        sitemap_view,
         name="django.contrib.sitemaps.views.sitemap",
     ),
 ]

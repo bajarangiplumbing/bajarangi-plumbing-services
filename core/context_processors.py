@@ -197,6 +197,11 @@ def business(request):
         "business_entity_type": _env(
             "BUSINESS_ENTITY_TYPE", _NAME_RE, "Sole proprietorship"
         ),
+        "business_address_street": street,
+        "business_address_locality": locality,
+        "business_address_city": city,
+        "business_address_state": state,
+        "business_address_pin": pin,
         "business_address_lines": address_lines,
         "business_address_inline": ", ".join(address_lines),
         "business_address_is_complete": bool(street),
