@@ -368,15 +368,7 @@ section > .wrap{position:relative;z-index:2}
 .method-head .w1{color:#6FA8DC}.method-head .w2{color:var(--orange)}.method-head .w3{color:#E8704A}
 .method-head p{color:rgba(255,255,255,.65);margin-top:22px;font-size:1.06rem;max-width:52ch;margin-inline:auto}
 .m-dot{position:absolute;border-radius:50%;z-index:1}
-.m-photo{position:absolute;z-index:2;width:clamp(120px,16vw,230px);aspect-ratio:3/4;border-radius:14px;
-  background:linear-gradient(160deg,#1B3559,#12233F);border:1px solid rgba(255,255,255,.14);
-  display:grid;place-items:center;box-shadow:0 24px 60px -20px rgba(0,0,0,.6)}
-/* was rgba(255,255,255,.45), under 4.5:1 against the tile gradient at
-   .68rem. .82 clears it comfortably. */
-.m-photo span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(255,255,255,.82);text-align:center;padding:8px}
 .method-pipes{position:absolute;inset:0;z-index:1;pointer-events:none}
-.method-photos{position:absolute;inset:0;z-index:2;pointer-events:none}
 .method-steps{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
 .mstep{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px}
 .mstep b{font-family:var(--disp);font-size:1.2rem;display:block;margin-bottom:8px}
@@ -384,18 +376,6 @@ section > .wrap{position:relative;z-index:2}
 .mstep p{color:rgba(255,255,255,.68);font-size:.95rem}
 @media(max-width:760px){
   .method-steps{grid-template-columns:1fr}
-  /* The prototype set `.m-photo{display:none}` here, so on a phone the
-     method section showed no photographic evidence at all - flagged in
-     PRD §2.4/§5 as one of the breakpoints that *removes* content on
-     small screens, "the opposite of mobile-first". Instead of hiding
-     them, the absolutely-placed tiles reflow into a static strip below
-     the steps. The container sits after .wrap in the DOM so this needs
-     no duplicated markup. */
-  .method-photos{position:static;display:grid;grid-template-columns:1fr 1fr;
-    gap:12px;margin-top:28px;z-index:3;pointer-events:auto}
-  .m-photo{position:static;inset:auto !important;width:auto;aspect-ratio:4/3;
-    transform:none !important}
-  .m-photo:last-child{grid-column:1 / -1}
 }
 
 /* ---------- arc carousel gallery ---------- */
